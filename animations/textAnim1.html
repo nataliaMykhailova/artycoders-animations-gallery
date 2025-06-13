@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Text Scramble Animation</title>
+    <link rel="stylesheet" href="/reset.css">
+
+
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/SplitText.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrambleTextPlugin.min.js"></script>
+
+    <style>
+       .anim1 {
+           [data-text-scramble] {
+               display: inline-block;
+               position: relative;
+           }
+
+           [data-text-scramble] .absolute-text {
+               position: absolute;
+               top: 0;
+               left: 0;
+               white-space: pre;
+               pointer-events: none;
+           }
+
+           [data-text-scramble] .real-text {
+               visibility: hidden;
+               white-space: pre;
+           }
+       }
+    </style>
+</head>
+<body>
+
+<div class="anim1">
+    <h1 data-text-scramble data-scramble-hover>
+        Привіт, світ!
+    </h1>
+<br>
+<br>
+<br>
+    <p data-text-scramble data-scramble-hover data-scramble-color="#f00">
+    Hover me!
+  </p>
+</div>
+
+<script>
+    gsap.registerPlugin(SplitText, ScrambleTextPlugin);
+
+    function createTextScrambleAnimation({
+                                             element, from, timescale = 1, delay = 0,
+                                             onHover = false, onInit = false,
+                                             lowercase = false, uppercase = false,
+                                             scramble = true, speed = 0.6, color = ''
+                                         }) {
+        const existing = element.querySelector('.real-text');
+        const raw = from != null
+            ? from
+            : existing
+                ? existing.textContent.trim()
+                : element.textContent.trim();
+
+        element.innerHTML = `
+        <span class="absolute-text" aria-hidden="true">${raw}</span>
+        <span class="real-text">${raw}</span>
+      `;
+
+        const abs = element.querySelector('.absolute-text');
+        let splitter = null;
+
+        function buildTimeline() {
+            const chars = raw.split('').filter(ch => ch !== ' ');
+            const R = 0.03;
+            const fadeDur = chars.length * R;
+
+            if (splitter) splitter.revert();
+            splitter = new SplitText(abs, {type: "chars"});
+
+            const tl = gsap.timeline({paused: true, delay});
+            tl.timeScale(timescale);
+
+            tl.to(splitter.chars, {
+                opacity: 0.2,
+                duration: fadeDur,
+                stagger: R,
+                ease: "power2.out",
+                color: color || "inherit"
+            }, 0);
+            tl.to(splitter.chars, {
+                opacity: 1,
+                duration: fadeDur,
+                stagger: R + 0.01,
+                ease: "power2.out",
+                clearProps: "color"
+            }, fadeDur);
+
+            if (scramble) {
+                splitter.chars.forEach((ch, idx) => {
+                    tl.to(ch, {
+                        scrambleText: {
+                            text: chars[idx] || "",
+                            speed,
+                            chars: lowercase
+                                ? "lowerCase"
+                                : uppercase
+                                    ? "upperCase"
+                                    : "upperAndLowerCase"
+                        },
+                        duration: 0.7,
+                        ease: "none"
+                    }, idx * R + 0.05);
+                });
+            }
+
+            return tl;
+        }
+
+        let master = buildTimeline();
+        if (onInit) master.restart();
+
+        if (onHover) {
+            element.style.cursor = "pointer";
+            element.addEventListener("mouseenter", () => {
+                master.kill();
+                master = buildTimeline();
+                master.restart();
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('[data-text-scramble]').forEach(el => {
+            createTextScrambleAnimation({
+                element: el,
+                from: el.getAttribute('data-scramble-from'),
+                timescale: parseFloat(el.getAttribute('data-scramble-timescale')) || 1,
+                delay: parseFloat(el.getAttribute('data-scramble-delay')) || 0,
+                onHover: el.hasAttribute('data-scramble-hover'),
+                onInit: el.hasAttribute('data-scramble-init'),
+                lowercase: el.hasAttribute('data-scramble-lowercase'),
+                uppercase: el.hasAttribute('data-scramble-uppercase'),
+                scramble: !el.hasAttribute('data-scramble-noscramble'),
+                speed: parseFloat(el.getAttribute('data-scramble-speed')) || 0.6,
+                color: el.getAttribute('data-scramble-color') || ""
+            });
+        });
+    });
+</script>
+</body>
+</html>
