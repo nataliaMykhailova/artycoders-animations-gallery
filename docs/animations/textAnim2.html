@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Typewriter Hover Test</title>
+    <link rel="stylesheet" href="/reset.css">
+    <style>
+
+        [data-hover-text] .char {
+            display: inline-block;
+            position: relative;
+        }
+
+        [data-hover-text] .char::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 1px;
+            width: 100%;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        [data-hover-text] .char.underline::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<h1 data-hover-text >Hover Me!</h1>
+<br>
+<p data-hover-text>Lorem ipsum dolor.</p>
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+<script>
+    const charsPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+    const duration = 0.1; // загальна тривалість анімації
+    const stagger = 0.05; // затримка між символами
+
+    document.querySelectorAll('[data-hover-text]').forEach(el => {
+        new SplitType(el, { types: 'chars' });
+        const chars = el.querySelectorAll('.char');
+
+        // запам'ятаємо оригінальні символи
+        chars.forEach(char => {
+            char.dataset.char = char.textContent;
+        });
+
+        let currentTl = null;
+
+        function playAnimation() {
+            if (currentTl) currentTl.kill();
+            const tl = gsap.timeline();
+            currentTl = tl;
+
+            chars.forEach((char, i) => {
+                const original = char.dataset.char;
+                const random   = charsPool.charAt(Math.floor(Math.random() * charsPool.length));
+
+                tl.call(() => {
+                    char.textContent = random;
+                    char.classList.add('underline');
+                }, null, i * stagger);
+
+                tl.to(char, {
+                    textContent: original,
+                    duration: duration / 2,
+                    ease: "power1.out",
+                    onComplete: () => char.classList.remove('underline')
+                }, i * stagger + duration / 2);
+            });
+        }
+
+        el.addEventListener('mouseenter', playAnimation);
+        el.addEventListener('mouseleave', playAnimation);
+    });
+</script>
+
+</body>
+</html>
