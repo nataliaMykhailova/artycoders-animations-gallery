@@ -16,11 +16,10 @@ header {
 
 
 body {
-  padding-top: calc(1rem + 1.5em); /* підлаштуй під свій header-height */
+  padding-top: calc(1rem + 1.5em);
   box-sizing: border-box;
 }
 
-/* input і селекти – більші, з border-radius і темним фоном */
 #search,
 #filterType,
 #filterSubtype {
@@ -33,7 +32,6 @@ body {
   outline: none;
 }
 
-/* мінімальні ширини, щоб було зручно */
 #search {
   min-width: 250px;
 }
@@ -42,24 +40,20 @@ body {
   min-width: 140px;
 }
 
-/* ————————————————
-   Flex-галерея із двома в ряд
-   ———————————————— */
+
 main#gallery {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /* vertical gap 2rem, horizontal gap 15vw */
   gap: 2rem 15vw;
   margin: 2rem auto;
 }
 
-/* Картки підлаштовуються під контент */
 .card {
   display: inline-block;
 }
 .card iframe {
-  border: 2px solid dimgrey;      /* колір рамки */
+  border: 2px solid dimgrey;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   padding: 1rem 2rem;
 }

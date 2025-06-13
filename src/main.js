@@ -1,4 +1,3 @@
-// src/main.js
 
 import './style.css';
 import animations from './data/list.json';
@@ -8,9 +7,6 @@ const searchInput   = document.getElementById('search');
 const typeSelect    = document.getElementById('filterType');
 const subtypeSelect = document.getElementById('filterSubtype');
 
-/**
- * Наповнює селект типів унікальними значеннями animation.type
- */
 function populateTypeSelect() {
     const types = [...new Set(animations.map(a => a.type))];
     types.forEach(type => {
@@ -21,9 +17,6 @@ function populateTypeSelect() {
     });
 }
 
-/**
- * Наповнює селект підтипів, залежно від вибраного типу
- */
 function populateSubtypeSelect(selectedType) {
     subtypeSelect.innerHTML = '<option value="">— Усі підтипи —</option>';
 
@@ -49,10 +42,6 @@ function populateSubtypeSelect(selectedType) {
     });
 }
 
-/**
- * Фільтрує animations за текстом, типом і підтипом
- * і викликає renderGallery
- */
 function applyFilters() {
     const q          = searchInput.value.trim().toLowerCase();
     const selType    = typeSelect.value;
@@ -68,24 +57,17 @@ function applyFilters() {
     renderGallery(filtered);
 }
 
-/**
- * Рендерить масив items у flex-галерею
- * Підтримує width/height із JSON
- * Якщо їх нема — автоматично підганяє під вміст iframe
- */
+
 function renderGallery(items) {
-    // Очищаємо галерею перед рендером
     gallery.innerHTML = '';
 
     items.forEach(a => {
-        const w = a.width;    // може бути '50vw', '400px' тощо
-        const h = a.height;   // може бути '200px', 'auto' тощо
+        const w = a.width;
+        const h = a.height;
 
-        // Створюємо контейнер-картку
         const card = document.createElement('div');
         card.className = 'card';
 
-        // Інлайн-стиль для iframe: застосуємо width/height лише якщо вони задані
         card.innerHTML = `
       <h3>${a.title}</h3>
       <iframe
@@ -104,12 +86,10 @@ function renderGallery(items) {
 
         const iframe = card.querySelector('iframe');
 
-        // Якщо ні width, ні height не задані — підганяємо під вміст
         if (!w && !h) {
             iframe.addEventListener('load', () => {
                 try {
                     const doc = iframe.contentWindow.document;
-                    // Реальні розміри контенту всередині iframe
                     const iw = Math.max(
                         doc.documentElement.scrollWidth,
                         doc.body.scrollWidth
@@ -129,13 +109,11 @@ function renderGallery(items) {
 }
 
 
-// Ініціалізація після завантаження сторінки
 document.addEventListener('DOMContentLoaded', () => {
     populateTypeSelect();
-    populateSubtypeSelect('');    // на початку без обраного типу — підтипи відключені
+    populateSubtypeSelect('');
     renderGallery(animations);
 
-    // Навішуємо обробники
     typeSelect.addEventListener('change', () => {
         populateSubtypeSelect(typeSelect.value);
         applyFilters();
