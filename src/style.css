@@ -1,0 +1,66 @@
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1a1a1a;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+
+body {
+  padding-top: calc(1rem + 1.5em); /* підлаштуй під свій header-height */
+  box-sizing: border-box;
+}
+
+/* input і селекти – більші, з border-radius і темним фоном */
+#search,
+#filterType,
+#filterSubtype {
+  font-size: 1.1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #fff;
+  outline: none;
+}
+
+/* мінімальні ширини, щоб було зручно */
+#search {
+  min-width: 250px;
+}
+#filterType,
+#filterSubtype {
+  min-width: 140px;
+}
+
+/* ————————————————
+   Flex-галерея із двома в ряд
+   ———————————————— */
+main#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* vertical gap 2rem, horizontal gap 15vw */
+  gap: 2rem 15vw;
+  margin: 2rem auto;
+}
+
+/* Картки підлаштовуються під контент */
+.card {
+  display: inline-block;
+}
+.card iframe {
+  border: 2px solid dimgrey;      /* колір рамки */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  padding: 1rem 2rem;
+}
+

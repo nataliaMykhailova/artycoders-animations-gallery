@@ -1,0 +1,17 @@
+[
+  {
+    "id": "2",
+    "title": "textAnim2",
+    "type": "text",
+    "subtypes": ["hover"],
+    "path": "animations/textAnim2.html",
+    "width": "35vw"
+  },
+  {
+    "id": "1",
+    "title": "textAnim1",
+    "type": "text",
+    "subtypes": ["link"],
+    "path": "animations/textAnim1.html"
+  }
+]
