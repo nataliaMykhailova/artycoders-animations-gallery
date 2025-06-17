@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Синхронна дзеркальна анімація блоків</title>
+    <style>
+        .block {
+            width: 100%;
+            height: 100vh;
+            background: grey;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Контейнер з перспективою */
+        .container-for-block-anim {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        /* Стилі для блоків */
+        .block-anim {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            transform: translateY(-50%);
+            transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease-out;
+            backface-visibility: hidden;
+            opacity: 0;
+
+        }
+        /* Лівий блок */
+        .left-block-anim {
+            left: 0;
+            background: url("https://cdn.photoroom.com/v2/image-cache?path=gs://background-7ef44.appspot.com/backgrounds_v3/red/13_-_red.jpg") no-repeat center center / 100% 100%;
+            transform-origin: left center;
+            transform: translateZ(1000px) rotateY(90deg) scale(0.8);
+        }
+        /* Правий блок */
+        .right-block-anim {
+            right: 0;
+            background: url("https://cdn.photoroom.com/v2/image-cache?path=gs://background-7ef44.appspot.com/backgrounds_v3/red/13_-_red.jpg") no-repeat center center / cover;
+            transform-origin: right center;
+            transform: translateZ(1000px) rotateY(-90deg) scale(0.8);
+        }
+        /* Синхронна анімація: обидва блоки повертаються до позиції 0 */
+        .animate .left-block-anim,
+        .animate .right-block-anim {
+            transform: translateZ(0) rotateY(0) scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="block">контент</div>
+<div class="container-for-block-anim">
+    <div class="block-anim left-block-anim"></div>
+    <div class="block-anim right-block-anim"></div>
+</div>
+<div class="block">контент</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.querySelector(".container-for-block-anim");
+        let lastScrollY = window.scrollY;
+        const thresholdY = () => window.innerHeight * 0.7;
+
+        window.addEventListener("scroll", () => {
+            const currentScrollY = window.scrollY;
+            const rect = container.getBoundingClientRect();
+
+            if (currentScrollY > lastScrollY) {
+                if (rect.top <= thresholdY()) {
+                    container.classList.add("animate");
+                }
+            } else {
+                if (rect.top > thresholdY()) {
+                    container.classList.remove("animate");
+                }
+            }
+
+            lastScrollY = currentScrollY;
+        });
+    });
+</script>
+
+</body>
+</html>

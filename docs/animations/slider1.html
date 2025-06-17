@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .slide-wrapper{
+            margin-top: 2vw;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            user-select: none;
+        }
+        .slide{
+            flex-shrink: 0;
+            width: 9.467vw;
+            height: 41.633vw;
+            overflow: hidden;
+            position: relative;
+            transition: width 800ms ease;
+        }
+        .slide.active{
+            width: 71.472vw;
+        }
+        .slide.prev{
+            width: 0;
+        }
+        .slide-info {
+            width: 100%;
+            height: 100%;
+        }
+        .bg-sl{
+            height: 100%;
+            width: 100%;
+            background-size: cover;
+        }
+        .bg-sl.is--1{
+            background-image: url("https://cdn.prod.website-files.com/684c1041cbc3b17dce1ae414/684c1041cbc3b17dce1ae424_sw2.webp");
+        }
+        .bg-sl.is--2{
+            background-image: url("https://cdn.prod.website-files.com/684c1041cbc3b17dce1ae414/684c1041cbc3b17dce1ae423_sw1.webp");
+        }
+        .bg-sl.is--3{
+            background-image: url("https://cdn.prod.website-files.com/684c1041cbc3b17dce1ae414/684c1041cbc3b17dce1ae422_sw3.webp");
+        }
+        .bg-sl.is--4{
+            background-image: url("https://cdn.prod.website-files.com/684c1041cbc3b17dce1ae414/684c1041cbc3b17dce1ae425_sw4.webp");
+        }
+        .button-next.disabled, .button-prev.disabled{
+            pointer-events: none;
+            opacity: 40%;
+        }
+    </style>
+</head>
+<body>
+<div class="swiper-cast">
+    <div class="swiper-menu">
+        <div class="menu-wrp">
+            <button class="button-prev disabled">
+                prev
+            </button>
+            <button class="button-next disabled">
+                next
+            </button>
+        </div>
+    </div>
+    <div class="slide-wrapper">
+        <div class="slide active">
+            <div class="slide-info">
+                <div class="bg-sl is--1"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--2"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--3"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--4"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--1"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--2"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--3"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+        <div class="slide next">
+            <div class="slide-info">
+                <div class="bg-sl is--4"></div>
+                <div class="head-sl-wrap">
+                    <p></p>
+                </div>
+            </div>
+            <div class="slide-year">
+                <p class="p-year"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    //swiper
+    function initCustomSlider(wrapperSelector, slideClass, btnNextSelector, btnPrevSelector) {
+        const wrapper = document.querySelector(wrapperSelector);
+        const btnNext = document.querySelector(btnNextSelector);
+        const btnPrev = document.querySelector(btnPrevSelector);
+
+        if (!wrapper) {
+            console.warn(`⚠️ Wrapper "${wrapperSelector}" не знайдено`);
+            return;
+        }
+
+        const slides = Array.from(wrapper.children).filter(child =>
+            child.classList.contains(slideClass)
+        );
+
+        if (slides.length === 0) {
+            return;
+        }
+
+        let currentIndex = 0;
+        let startX = 0;
+        let endX = 0;
+
+        function getBlockingIndex() {
+            return Math.ceil(slides.length / 2) - 1;
+        }
+
+        function updateSlides() {
+            const blockingIndex = getBlockingIndex();
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('prev', 'active', 'next');
+                if (i < currentIndex) {
+                    slide.classList.add('prev');
+                } else if (i === currentIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.add('next');
+                }
+            });
+
+            btnPrev?.classList.toggle('disabled', currentIndex === 0);
+            btnNext?.classList.toggle('disabled', currentIndex === blockingIndex);
+        }
+
+        function handleSwipe() {
+            const diff = endX - startX;
+            const threshold = 30;
+
+            if (Math.abs(diff) > threshold) {
+                if (diff < 0 && currentIndex < getBlockingIndex()) {
+                    currentIndex++;
+                } else if (diff > 0 && currentIndex > 0) {
+                    currentIndex--;
+                }
+                updateSlides();
+            }
+        }
+
+        btnNext?.addEventListener('click', e => {
+            e.preventDefault();
+            if (currentIndex < getBlockingIndex()) {
+                currentIndex++;
+                updateSlides();
+            }
+        });
+
+        btnPrev?.addEventListener('click', e => {
+            e.preventDefault();
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlides();
+            }
+        });
+
+        wrapper.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+        });
+
+        wrapper.addEventListener('touchend', e => {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        wrapper.addEventListener('mousedown', e => {
+            startX = e.clientX;
+        });
+
+        wrapper.addEventListener('mouseup', e => {
+            endX = e.clientX;
+            handleSwipe();
+        });
+
+        updateSlides();
+    }
+
+
+    initCustomSlider('.slide-wrapper', 'slide', '.button-next', '.button-prev');
+
+</script>
+</body>
+</html>
+
+

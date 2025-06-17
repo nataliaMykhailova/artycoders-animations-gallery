@@ -13,5 +13,23 @@
     "type": "text",
     "subtypes": ["link"],
     "path": "animations/textAnim1.html"
+  },
+  {
+    "id": "3",
+    "title": "slider1",
+    "type": "slider",
+    "subtypes": [""],
+    "path": "animations/slider1.html",
+    "width": "60vw",
+    "height": "35vw"
+  },
+  {
+    "id": "4",
+    "title": "blocks-anim1",
+    "type": "blocks",
+    "subtypes": ["appear"],
+    "path": "animations/blocks-anim1.html",
+    "width": "80vw",
+    "height": "70vh"
   }
 ]
