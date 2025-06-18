@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vertical count up animation</title>
+
+    <style>
+
+        .odometer {
+          display: flex;
+          overflow: hidden;
+        }
+
+        p {
+            font-size: 2em;
+        }
+      </style>
+      </head>
+<body>
+
+<div class="odometer-wrapper">
+  <div data-start-value="130495" class="odometer">
+    <p class="paragraph">100000</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/ScrollTrigger.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const odometers = document.querySelectorAll('.odometer');
+
+    odometers.forEach((odometer) => {
+      const fontSize = parseFloat(window.getComputedStyle(odometer).fontSize);
+      const digitHeight = fontSize;
+      const startValue = parseInt(odometer.getAttribute('data-start-value'), 10);
+      const endValue = parseInt(odometer.querySelector('p').textContent, 10);
+
+      odometer.innerHTML = '';
+      generateOdometerDigits(odometer, startValue, endValue, digitHeight);
+      animateOdometerDigits(odometer, startValue, endValue, digitHeight);
+    });
+  });
+
+  function generateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
+    const length = endValue.toString().length;
+    const startValueString = startValue.toString().padStart(length, '0');
+
+    for (let i = 0; i < length; i++) {
+      const digitContainer = document.createElement('div');
+      digitContainer.classList.add('digit-container');
+      digitContainer.style.height = `${digitHeight}px`;
+      digitContainer.style.display = 'flex';
+      digitContainer.style.flexDirection = 'column';
+      odometerElement.appendChild(digitContainer);
+
+      for (let k = 0; k < 4; k++) {
+        for (let j = 0; j < 10; j++) {
+          const digit = document.createElement('div');
+          digit.textContent = j;
+          digit.classList.add('digit');
+          digit.style.height = `${digitHeight}px`;
+          digit.style.fontSize = `${digitHeight}px`;
+          digitContainer.appendChild(digit);
+        }
+      }
+
+      const currentDigit = parseInt(startValueString.charAt(i), 10);
+      digitContainer.style.transform = `translateY(${-(currentDigit + 10) * digitHeight}px)`;
+    }
+  }
+
+  function animateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
+    const length = Math.max(startValue.toString().length, endValue.toString().length);
+    const endValueString = endValue.toString().padStart(length, '0');
+
+    Array.from(odometerElement.children).forEach((container, index) => {
+      const startDigit = parseInt(startValue.toString().padStart(length, '0').charAt(index), 10);
+      const endDigit = parseInt(endValueString.charAt(index), 10);
+
+      let targetPosition = -(endDigit + 20) * digitHeight;
+
+      gsap.to(container, {
+        y: `${targetPosition}px`,
+        duration: 2,
+        ease: "power2.out",
+      });
+    });
+  }
+</script>
+  </body>
+</html>
