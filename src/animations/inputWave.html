@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wavy border animation</title>
+
+    <style>
+      .input-field {
+        border: none !important;
+        outline: none !important;
+        min-height: 40px;
+        width: 100%;
+        padding: 10px;
+      }
+
+      .field-wrapper {
+        position: relative;
+        overflow: hidden;
+        margin: 20px;
+        width: 300px;
+      }
+
+      .input-border {
+        width: 300%;
+        min-height: 80px;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIGQ9Ik0wLDU2LjVjMCwwLDI5OC42NjYsMCwzOTkuMzMzLDBDNDQ4LjMzNiw1Ni41LDUxMy45OTQsNDYsNTk3LDQ2Yzc3LjMyNywwLDEzNSwxMC41LDIwMC45OTksMTAuNWM5NS45OTYsMCw0MDIuMDAxLDAsNDAyLjAwMSwwIj48L3BhdGg+PC9zdmc+);
+        background-position: center bottom;
+        background-repeat: repeat-x;
+        pointer-events: none;
+        touch-action: none;
+        opacity: 0.3;
+        transform: translateX(-66.66%);
+        transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
+      }
+
+      .input-border.active {
+        transform: translateX(0);
+        opacity: 1;
+        transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
+      }
+
+      .input-border-active {
+        -webkit-text-size-adjust: 100%;
+        --brand-white: #ececec;
+        --brand-black: #191a19;
+        --pink: #e54b8d;
+        --white: white;
+        --black: black;
+        --blue: #c0fcf8;
+        --dark-grey: #333;
+        --light-grey: #999;
+        color: var(--brand-black);
+        font-family: Ppneuemontreal, sans-serif;
+        font-weight: 500;
+        line-height: 140%;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        text-align: center;
+        letter-spacing: -.02em;
+        text-transform: uppercase;
+        font-size: .83vw;
+        box-sizing: border-box;
+        width: 300%;
+        height: 160%;
+        position: absolute;
+        inset: auto 0% 0%;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIGQ9Ik0wLDU2LjVjMCwwLDI5OC42NjYsMCwzOTkuMzMzLDBDNDQ4LjMzNiw1Ni41LDUxMy45OTQsNDYsNTk3LDQ2Yzc3LjMyNywwLDEzNSwxMC41LDIwMC45OTksMTAuNWM5NS45OTYsMCw0MDIuMDAxLDAsNDAyLjAwMSwwIj48L3BhdGg+PC9zdmc+);
+        background-position: center bottom;
+        background-repeat: repeat-x;
+        pointer-events: none;
+        touch-action: none;
+        transform: translateX(0);
+        opacity: 1;
+        transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
+      }
+
+      .input-border.inactive {
+        opacity: 0.3;
+        transform: translateX(-66.66%);
+        transition: opacity 0.5s, transform 0s; /* Stops animation for transform */
+      }
+    </style>
+</head>
+<body>
+<div class="field-wrapper">
+  <input type="text" class="input-field" placeholder="Enter your text here">
+  <div class="input-border"></div>
+</div>
+
+<div class="field-wrapper">
+  <input type="text" class="input-field" placeholder="Another input field">
+  <div class="input-border"></div>
+</div>
+
+<div class="field-wrapper">
+  <textarea class="input-field" placeholder="Textarea field" style="height: 80px;"></textarea>
+  <div class="input-border"></div>
+</div>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const wrapper = event.target.closest(".field-wrapper");
+    const allBorders = document.querySelectorAll(".input-border");
+
+    if (wrapper) {
+      const inputBorder = wrapper.querySelector(".input-border");
+
+      if (inputBorder) {
+        allBorders.forEach((border) => {
+          if (border !== inputBorder) {
+            border.classList.remove("active");
+            border.classList.add("inactive");
+          }
+        });
+
+        // Activate the clicked element
+        inputBorder.classList.add("active");
+        inputBorder.classList.remove("inactive");
+      }
+    } else {
+      // Deactivate all borders if clicked outside
+      allBorders.forEach((border) => {
+        border.classList.remove("active");
+        border.classList.add("inactive");
+      });
+    }
+  });
+</script>
+</body>
+</html>

@@ -40,5 +40,13 @@
     "path": "animations/textAnimCube.html",
     "width": "35vw",
     "height": "16vw"
+  },
+  {
+    "id": "6",
+    "title": "inputWave",
+    "type": "border",
+    "subtypes": [""],
+    "path": "animations/inputWave.html",
+    "width": "35vw"
   }
 ]
