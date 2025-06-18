@@ -9,7 +9,7 @@
             font-size: 2em !important;
         }
 
-        [number] {
+        [number-animation] {
             display: flex;
         }
 
@@ -21,7 +21,7 @@
 
         .digit-container {
             display: flex;
-            transition: transform 2s ease-in-out;
+            transition: transform 3s ease-in-out;
         }
 
         .digit-container span {
@@ -32,77 +32,110 @@
 </head>
 <body>
 
-<p number>123456789</p>
+<p number-animation="staggered">123456789</p>
+<p number-animation="sync">100</p>
 
 <script>
-    const numberElements = document.querySelectorAll('[number]');
+    document.addEventListener('DOMContentLoaded', () => {
+        const numberElements = document.querySelectorAll('[number-animation]');
 
-    function initializeNumber(element) {
-        let initialNumber = element.getAttribute('data-initial') || '0';
-        const finalNumber = element.textContent.trim() || '0';
-        element.textContent = '';
+        numberElements.forEach((element) => {
+            const mode = element.getAttribute('number-animation');
+            const finalNumber = element.textContent.trim() || '0';
+            const initialNumber = element.getAttribute('data-initial') || '0';
+            const duration = parseInt(element.getAttribute('data-duration'), 10) || 3000;
 
-        const maxLength = Math.max(initialNumber.length, finalNumber.length);
-        initialNumber = initialNumber.padStart(maxLength, '0');
+            const maxLength = Math.max(initialNumber.length, finalNumber.length);
+            const paddedInitial = initialNumber.padStart(maxLength, '0');
+            const paddedFinal = finalNumber.padStart(maxLength, '0');
 
-        initialNumber.split('').forEach(() => {
-            const digitWrap = document.createElement('div');
-            digitWrap.className = 'digit-wrap';
+            element.textContent = '';
 
-            const digitContainer = document.createElement('div');
-            digitContainer.className = 'digit-container';
+            // Create digit elements
+            paddedInitial.split('').forEach(() => {
+                const digitWrap = document.createElement('div');
+                digitWrap.className = 'digit-wrap';
 
-            for (let i = 0; i <= 9; i++) {
-                const span = document.createElement('span');
-                span.textContent = i;
-                digitContainer.appendChild(span);
-            }
-            const extraZero = document.createElement('span');
-            extraZero.textContent = '0';
-            digitContainer.appendChild(extraZero);
+                const digitContainer = document.createElement('div');
+                digitContainer.className = 'digit-container';
 
-            digitContainer.style.transform = `translateX(0em)`;
+                for (let i = 0; i <= 9; i++) {
+                    const span = document.createElement('span');
+                    span.textContent = i;
+                    digitContainer.appendChild(span);
+                }
+                const extraZero = document.createElement('span');
+                extraZero.textContent = '0';
+                digitContainer.appendChild(extraZero);
 
-            digitWrap.appendChild(digitContainer);
-            element.appendChild(digitWrap);
-        });
+                digitContainer.style.transform = `translateX(0em)`;
 
-        return finalNumber.padStart(maxLength, '0');
-    }
+                digitWrap.appendChild(digitContainer);
+                element.appendChild(digitWrap);
+            });
 
-    function animateToFinalNumber(element, finalNumber) {
-        finalNumber.split('').forEach((finalDigit, index) => {
-            const digitWrap = element.children[index];
-            const digitContainer = digitWrap.querySelector('.digit-container');
-            const finalDigitValue = parseInt(finalDigit, 10);
+            const animateStaggered = () => {
+                paddedFinal.split('').forEach((digit, index) => {
+                    const digitWrap = element.children[index];
+                    const digitContainer = digitWrap.querySelector('.digit-container');
+                    const finalDigitValue = parseInt(digit, 10);
+                    const delay = index * 100;
 
-            const delay = index * 0.1;
+                    setTimeout(() => {
+                        const targetPos = finalDigitValue === 0 ? -5.0 : -finalDigitValue * 0.5;
+                        digitContainer.style.transform = `translateX(${targetPos}em)`;
+                    }, delay);
+                });
+            };
 
-            setTimeout(() => {
-                const targetPosition = finalDigitValue === 0 ? -5.0 : -finalDigitValue * 0.5;
-                digitContainer.style.transform = `translateX(${targetPosition}em)`;
-            }, delay * 1000);
-        });
-    }
+            const animateSync = () => {
+                let startTime = null;
+                let hasAnimated = false;
+                const easing = (t) => 1 - Math.pow(1 - t, 1.7);
 
-    numberElements.forEach((numberEl) => {
-        const finalNumber = initializeNumber(numberEl);
+                const animateFinal = () => {
+                    paddedFinal.split('').forEach((digit, index) => {
+                        const digitWrap = element.children[index];
+                        const digitContainer = digitWrap.querySelector('.digit-container');
+                        const finalDigitValue = parseInt(digit, 10);
+                        const targetPos = finalDigitValue === 0 ? -5.0 : -finalDigitValue * 0.5;
+                        digitContainer.style.transform = `translateX(${targetPos}em)`;
+                    });
+                };
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
+                const update = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const elapsed = timestamp - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = easing(progress);
+
+                    if (!hasAnimated && eased > 0.1) {
+                        animateFinal();
+                        hasAnimated = true;
+                    }
+
+                    if (progress < 1) requestAnimationFrame(update);
+                };
+
+                requestAnimationFrame(update);
+            };
+
+            // Set up IntersectionObserver
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        animateToFinalNumber(numberEl, finalNumber);
-                        observer.unobserve(numberEl);
+                        if (mode === 'staggered') {
+                            animateStaggered();
+                        } else if (mode === 'sync') {
+                            animateSync();
+                        }
+                        observer.unobserve(entry.target);
                     }
                 });
-            },
-            {
-                threshold: 0.35,
-            }
-        );
+            }, { threshold: 0.35 });
 
-        observer.observe(numberEl);
+            observer.observe(element);
+        });
     });
 </script>
 </body>
