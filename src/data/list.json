@@ -56,7 +56,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/horizontalCounter.html",
-    "width": "15vw",
+    "width": "16vw",
     "height": "12vw"
   },
   {
@@ -65,7 +65,7 @@
     "type": "button",
     "subtypes": ["hover"],
     "path": "animations/buttonHover1.html",
-    "width": "15vw",
+    "width": "16vw",
     "height": "12vw"
   },
   {
@@ -74,7 +74,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/verticalCounter.html",
-    "width": "15vw",
+    "width": "16vw",
     "height": "12vw"
   },
   {
@@ -83,7 +83,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/cubicCounter.html",
-    "width": "15vw",
+    "width": "16vw",
     "height": "12vw"
   }
 ]

@@ -6,25 +6,17 @@
 
     <!-- текстовий елемент із кінцевими цифрами потрібно обгорнути у div з класом "odometer";
          .odometer треба також обгорнути у .odometer-wrapper;
-         .odometer потрібно виставити display: flex i overflow: hidden,
+         .odometer потрібно виставити display: flex, overflow: hidden i задати font-size,
          а також додати атрибут data-start-value="130495" (можуть бути рандомні цифри, однак по кількості,
          номер має збігатись із тим, який вказаний у структурі);
          додати два посилання на бібліотеки і сам script -->
 
     <style>
-        body { /* стилі body не треба додати */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
         .odometer {
           display: flex;
           overflow: hidden;
           font-size: 2em !important; /* можна задавати у будь-якій одиниці */
         }
-
       </style>
       </head>
 <body>
