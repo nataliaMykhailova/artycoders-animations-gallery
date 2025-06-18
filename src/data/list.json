@@ -36,7 +36,7 @@
     "id": "5",
     "title": "textAnimCube",
     "type": "text",
-    "subtypes": ["scroll"],
+    "subtypes": ["appear"],
     "path": "animations/textAnimCube.html",
     "width": "35vw"
   }
