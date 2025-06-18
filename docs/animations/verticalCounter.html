@@ -4,12 +4,25 @@
     <meta charset="UTF-8">
     <title>Vertical count up animation</title>
 
+    <!-- текстовий елемент із кінцевими цифрами потрібно обгорнути у div з класом "odometer";
+         .odometer треба також обгорнути у .odometer-wrapper;
+         .odometer потрібно виставити display: flex i overflow: hidden,
+         а також додати атрибут data-start-value="130495" (можуть бути рандомні цифри, однак по кількості,
+         номер має збігатись із тим, який вказаний у структурі);
+         додати два посилання на бібліотеки і сам script -->
+
     <style>
+        body { /* стилі body не треба додати */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
 
         .odometer {
           display: flex;
           overflow: hidden;
-          font-size: 2em !important;
+          font-size: 2em !important; /* можна задавати у будь-якій одиниці */
         }
 
       </style>
@@ -26,66 +39,74 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/ScrollTrigger.min.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const odometers = document.querySelectorAll('.odometer');
+    document.addEventListener("DOMContentLoaded", function () {
+        const odometers = document.querySelectorAll('.odometer');
 
-    odometers.forEach((odometer) => {
-      const fontSize = parseFloat(window.getComputedStyle(odometer).fontSize);
-      const digitHeight = fontSize;
-      const startValue = parseInt(odometer.getAttribute('data-start-value'), 10);
-      const endValue = parseInt(odometer.querySelector('p').textContent, 10);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const odometer = entry.target;
 
-      odometer.innerHTML = '';
-      generateOdometerDigits(odometer, startValue, endValue, digitHeight);
-      animateOdometerDigits(odometer, startValue, endValue, digitHeight);
+                    const fontSize = parseFloat(window.getComputedStyle(odometer).fontSize);
+                    const digitHeight = fontSize;
+                    const startValue = parseInt(odometer.getAttribute('data-start-value'), 10);
+                    const endValue = parseInt(odometer.querySelector('p').textContent, 10);
+
+                    odometer.innerHTML = '';
+                    generateOdometerDigits(odometer, startValue, endValue, digitHeight);
+                    animateOdometerDigits(odometer, startValue, endValue, digitHeight);
+
+                    observer.unobserve(odometer);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        odometers.forEach((odometer) => observer.observe(odometer));
     });
-  });
 
-  function generateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
-    const length = endValue.toString().length;
-    const startValueString = startValue.toString().padStart(length, '0');
+    function generateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
+        const length = endValue.toString().length;
+        const startValueString = startValue.toString().padStart(length, '0');
 
-    for (let i = 0; i < length; i++) {
-      const digitContainer = document.createElement('div');
-      digitContainer.classList.add('digit-container');
-      digitContainer.style.height = `${digitHeight}px`;
-      digitContainer.style.display = 'flex';
-      digitContainer.style.flexDirection = 'column';
-      odometerElement.appendChild(digitContainer);
+        for (let i = 0; i < length; i++) {
+            const digitContainer = document.createElement('div');
+            digitContainer.classList.add('digit-container');
+            digitContainer.style.height = `${digitHeight}px`;
+            digitContainer.style.display = 'flex';
+            digitContainer.style.flexDirection = 'column';
+            odometerElement.appendChild(digitContainer);
 
-      for (let k = 0; k < 4; k++) {
-        for (let j = 0; j < 10; j++) {
-          const digit = document.createElement('div');
-          digit.textContent = j;
-          digit.classList.add('digit');
-          digit.style.height = `${digitHeight}px`;
-          digit.style.fontSize = `${digitHeight}px`;
-          digitContainer.appendChild(digit);
+            for (let k = 0; k < 4; k++) {
+                for (let j = 0; j < 10; j++) {
+                    const digit = document.createElement('div');
+                    digit.textContent = j;
+                    digit.classList.add('digit');
+                    digit.style.height = `${digitHeight}px`;
+                    digit.style.fontSize = `${digitHeight}px`;
+                    digitContainer.appendChild(digit);
+                }
+            }
+
+            const currentDigit = parseInt(startValueString.charAt(i), 10);
+            digitContainer.style.transform = `translateY(${-(currentDigit + 10) * digitHeight}px)`;
         }
-      }
-
-      const currentDigit = parseInt(startValueString.charAt(i), 10);
-      digitContainer.style.transform = `translateY(${-(currentDigit + 10) * digitHeight}px)`;
     }
-  }
 
-  function animateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
-    const length = Math.max(startValue.toString().length, endValue.toString().length);
-    const endValueString = endValue.toString().padStart(length, '0');
+    function animateOdometerDigits(odometerElement, startValue, endValue, digitHeight) {
+        const length = Math.max(startValue.toString().length, endValue.toString().length);
+        const endValueString = endValue.toString().padStart(length, '0');
 
-    Array.from(odometerElement.children).forEach((container, index) => {
-      const startDigit = parseInt(startValue.toString().padStart(length, '0').charAt(index), 10);
-      const endDigit = parseInt(endValueString.charAt(index), 10);
+        Array.from(odometerElement.children).forEach((container, index) => {
+            const endDigit = parseInt(endValueString.charAt(index), 10);
+            const targetPosition = -(endDigit + 20) * digitHeight;
 
-      let targetPosition = -(endDigit + 20) * digitHeight;
-
-      gsap.to(container, {
-        y: `${targetPosition}px`,
-        duration: 2,
-        ease: "power2.out",
-      });
-    });
-  }
+            gsap.to(container, {
+                y: `${targetPosition}px`,
+                duration: 2,
+                ease: "power2.out",
+            });
+        });
+    }
 </script>
   </body>
 </html>

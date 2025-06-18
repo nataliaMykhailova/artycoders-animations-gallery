@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Wavy border animation</title>
-    <!-- обгорни елемент input у .field-wrapper і додати всередину ще .input-border;
-         всі стилі .input-field додавати не треба, однак решту варто-->
+
+    <!-- обгорни елемент input у .field-wrapper і додай всередину .input-border;
+         css тут важливий-->
+
     <style>
-        body {
+        body { /* стилі body не треба додати */
             display: flex;
             flex-direction: column;
             gap: 1em;
@@ -14,17 +16,17 @@
         }
 
         .input-field {
-            border: none !important; /* треба додати */
-            resize: none;
+            border: none !important;
+            resize: none; /* необов'язкове */
             width: 100%;
-            outline: none !important; /* треба додати */
-            min-height: 4em !important; /* бажано додати, але міняти в залежності від вимог дизайну */
+            outline: none !important;
+            min-height: 4em !important; /* в залежності від вимог дизайну */
         }
 
         .field-wrapper {
             position: relative;
             overflow: hidden;
-            width: 100%; /* можна міняти */
+            width: 100%; /* в залежності від вимог дизайну */
         }
 
         .input-border {

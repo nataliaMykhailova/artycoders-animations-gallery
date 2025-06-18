@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cubic count up animation</title>
+
+    <!-- дві анімації відрізняються тим, що в другі цифри закінчують анімуватись одночасно
+       css тут важливий-->
+
+    <style>
+      body { /* стилі body не треба додати */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      [digit-animation] {
+        display: flex;
+        perspective: 100vw;
+        font-size: 2em; /* можна задавати у будь-якій одиниці */
+        line-height: 1em;
+      }
+
+      .digit-container {
+        position: relative;
+        transform-style: preserve-3d;
+        width: 0.5em;
+        height: 1em;
+      }
+
+      .digit {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        transition: transform 0.8s ease, opacity 0.8s ease;
+        opacity: 0;
+      }
+
+      .digit.top {
+        transform-origin: top center;
+        transform: rotateX(105deg) translateY(-1em);
+      }
+
+      .digit.front {
+        transform-origin: center;
+        transform: rotateX(0deg) translateY(0em);
+        opacity: 1;
+      }
+
+      .digit.bottom {
+        transform-origin: bottom center;
+        transform: rotateX(-85deg) translateY(0em);
+      }
+      </style>
+
+</head>
+<body>
+
+<div digit-animation>
+  <p>123456789</p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const digitAnimation = document.querySelector('[digit-animation]');
+    const finalValue = digitAnimation.querySelector('p').textContent.trim();
+    const initialValue = '0'.repeat(finalValue.length);
+
+    digitAnimation.innerHTML = '';
+    initialValue.split('').forEach((digit) => {
+      const digitContainer = document.createElement('div');
+      digitContainer.classList.add('digit-container');
+
+      const top = document.createElement('span');
+      top.classList.add('digit', 'top');
+      top.textContent = (parseInt(digit, 10) + 1) % 10;
+
+      const front = document.createElement('span');
+      front.classList.add('digit', 'front');
+      front.textContent = digit;
+
+      const bottom = document.createElement('span');
+      bottom.classList.add('digit', 'bottom');
+      bottom.textContent = (parseInt(digit, 10) - 1 + 10) % 10;
+
+      digitContainer.append(top, front, bottom);
+      digitAnimation.appendChild(digitContainer);
+    });
+
+    function animateDigit(digitContainer, currentDigit, targetDigit) {
+      if (currentDigit === targetDigit) return;
+
+      const nextDigit = (currentDigit + 1) % 10;
+
+      const newDigit = document.createElement('span');
+      newDigit.classList.add('digit', 'top');
+      newDigit.textContent = nextDigit;
+      digitContainer.appendChild(newDigit);
+
+      newDigit.offsetHeight;
+
+      setTimeout(() => {
+        newDigit.classList.remove('top');
+        newDigit.classList.add('front');
+
+        const currentFront = digitContainer.querySelector('.front');
+        if (currentFront) {
+          currentFront.classList.remove('front');
+          currentFront.classList.add('bottom');
+        }
+
+        setTimeout(() => {
+          const oldBottom = digitContainer.querySelector('.bottom');
+          if (oldBottom) {
+            digitContainer.removeChild(oldBottom);
+          }
+
+          animateDigit(digitContainer, nextDigit, targetDigit);
+
+        }, 800);
+
+      }, 10);
+    }
+
+    function startAnimations() {
+      const digitContainers = document.querySelectorAll('.digit-container');
+      const digitStates = Array.from(initialValue).map((digit) => parseInt(digit, 10));
+      const targetStates = Array.from(finalValue).map((digit) => parseInt(digit, 10));
+
+      digitContainers.forEach((container, index) => {
+        setTimeout(() => {
+          animateDigit(container, digitStates[index], targetStates[index]);
+        }, index * 30);
+      });
+    }
+
+    startAnimations();
+  });
+</script>
+</body>
+</html>

@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Horizontal count up animation</title>
 
-    <style>
+    <!-- ці дві анімації відрізняються тим, що в другі цифри закінчують анімуватись одночасно
+         css тут важливий-->
 
+    <style>
         [number-animation] {
             display: flex;
             font-size: 2em !important; /* можна задавати у будь-якій одиниці */
@@ -49,7 +51,6 @@
 
             element.textContent = '';
 
-            // Create digit elements
             paddedInitial.split('').forEach(() => {
                 const digitWrap = document.createElement('div');
                 digitWrap.className = 'digit-wrap';
@@ -118,7 +119,6 @@
                 requestAnimationFrame(update);
             };
 
-            // Set up IntersectionObserver
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
