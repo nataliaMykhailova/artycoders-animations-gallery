@@ -31,5 +31,13 @@
     "path": "animations/blocks-anim1.html",
     "width": "80vw",
     "height": "70vh"
+  },
+  {
+    "id": "5",
+    "title": "textAnimCube",
+    "type": "text",
+    "subtypes": ["scroll"],
+    "path": "animations/textAnimCube.html",
+    "width": "35vw"
   }
 ]
