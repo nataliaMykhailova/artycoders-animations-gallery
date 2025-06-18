@@ -67,5 +67,14 @@
     "path": "animations/buttonHover1.html",
     "width": "35vw",
     "height": "12vw"
+  },
+  {
+    "id": "8",
+    "title": "verticalCounter",
+    "type": "text",
+    "subtypes": ["appear"],
+    "path": "animations/verticalCounter.html",
+    "width": "35vw",
+    "height": "12vw"
   }
 ]
