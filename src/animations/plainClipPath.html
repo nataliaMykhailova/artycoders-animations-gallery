@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plain clip-path animations</title>
+
+    <style>
+      body { /* стилі body не треба додати */
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        font-size: 2em;
+      }
+    </style>
+</head>
+<body>
+
+<div animation-type="clip-down" split-type="char">
+  Lorem ipsum dolor sit amet,<br>consectetur adipiscing elit.
+</div>
+
+<div animation-type="clip-up" split-type="char">
+  Sed do eiusmod tempor incididunt,<br>ut labore et dolore magna aliqua.
+</div>
+
+<div animation-type="clip-left" split-type="char">
+  Ut enim ad minim veniam,<br>quis nostrud exercitation.
+</div>
+
+<div animation-type="clip-right" split-type="char">
+  Duis aute irure dolor,<br>in reprehenderit in voluptate.
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const elements = document.querySelectorAll("[animation-type]");
+
+    elements.forEach((el) => {
+      const splitType = el.getAttribute("split-type") || "char";
+      const animationType = el.getAttribute("animation-type");
+
+      if (splitType !== "none") {
+        new SplitType(el, {
+          types: splitType,
+          tagName: "span",
+        });
+      }
+
+      const selectors = {
+        char: ".char",
+        word: ".word",
+        line: ".line",
+      };
+
+      const targets = splitType === "none" ? [el] : el.querySelectorAll(selectors[splitType]);
+
+      let clipMap = {
+        "clip-up": "inset(0 0 100% 0)",
+        "clip-down": "inset(100% 0 0 0)",
+        "clip-left": "inset(0 100% 0 0)",
+        "clip-right": "inset(0 0 0 100%)",
+      };
+
+      const clipPath = clipMap[animationType] || "inset(0 0 100% 0)";
+
+      gsap.from(targets, {
+        clipPath: clipPath,
+        duration: 2,
+        ease: "power2.out",
+        stagger: { amount: 0.6 },
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -39,7 +39,7 @@
     "subtypes": ["appear"],
     "path": "animations/textAnimCube.html",
     "width": "35vw",
-    "height": "16vw"
+    "height": "17vw"
   },
   {
     "id": "6",
@@ -48,7 +48,7 @@
     "subtypes": [""],
     "path": "animations/inputWave.html",
     "width": "35vw",
-    "height": "16vw"
+    "height": "17vw"
   },
   {
     "id": "7",
@@ -85,5 +85,23 @@
     "path": "animations/cubicCounter.html",
     "width": "16vw",
     "height": "12vw"
+  },
+  {
+    "id": "11",
+    "title": "plainClipPath",
+    "type": "text",
+    "subtypes": ["appear"],
+    "path": "animations/plainClipPath.html",
+    "width": "37vw",
+    "height": "27vw"
+  },
+  {
+    "id": "12",
+    "title": "moreClipPath",
+    "type": "text",
+    "subtypes": ["appear"],
+    "path": "animations/moreClipPath.html",
+    "width": "37vw",
+    "height": "27vw"
   }
 ]
