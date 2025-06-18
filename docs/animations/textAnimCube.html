@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 2vw;
+      }
+
+      [cube-animation] {
+        perspective: 55vw;
+      }
+
+      .text-line-container,
+      .text-word-container,
+      .text-char-container {
+        display: inline-block;
+        position: relative;
+        transform-style: preserve-3d;
+        line-height: 0.4em;
+      }
+
+      .text-line,
+      .text-word,
+      .text-char {
+        display: inline-block;
+        backface-visibility: hidden;
+        transition: transform 1.6s ease-in-out, opacity 1.6s ease-in-out;
+        opacity: 1;
+      }
+
+      .line-top,
+      .word-top,
+      .char-top{
+        position: relative;
+        transform-origin: top center;
+        transform: rotateX(105deg) translateY(-0.5em) translateZ(0.1em);
+        opacity: 0;
+      }
+
+      .line-front,
+      .word-front,
+      .char-front {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: bottom center;
+        transform: rotateX(0deg) translateY(0em) translateZ(0em);
+        opacity: 1;
+      }
+    </style>
+
+</head>
+<body>
+<h2 cube-animation="line">LINE ANIMATION</h2>
+<h2 cube-animation="words">WORD ANIMATION</h2>
+<h2 cube-animation="chars">CHARACTER ANIMATION</h2>
+
+<script>
+  /* css обов'язковий;
+   до елемента додай атрибут `cube-animation` і обери значення атрибута "line", "words" або "chars", в залежності від бажаного типу анімації;
+P.S. Для розбиття рядків бажано використовувати `<br>` */
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cubes = document.querySelectorAll('[cube-animation]');
+
+    cubes.forEach((cube) => {
+      const mode = cube.getAttribute('cube-animation');
+      const lines = cube.innerHTML.split('<br>');
+      cube.innerHTML = '';
+
+      const containers = [];
+
+      lines.forEach((line, lineIndex) => {
+        if (mode === 'line') {
+          const lineContainer = document.createElement('div');
+          lineContainer.className = 'text-line-container';
+
+          const front = document.createElement('span');
+          front.className = 'text-line line-front';
+          front.innerHTML = line.trim();
+
+          const top = document.createElement('span');
+          top.className = 'text-line line-top';
+          top.innerHTML = line.trim();
+
+          lineContainer.appendChild(front);
+          lineContainer.appendChild(top);
+          cube.appendChild(lineContainer);
+          containers.push(lineContainer);
+        }
+
+        else if (mode === 'words') {
+          const words = line.trim().split(' ');
+          words.forEach((word, wordIndex) => {
+            const wordContainer = document.createElement('div');
+            wordContainer.className = 'text-word-container';
+
+            const front = document.createElement('span');
+            front.className = 'text-word word-front';
+            front.textContent = word;
+
+            const top = document.createElement('span');
+            top.className = 'text-word word-top';
+            top.textContent = word;
+
+            wordContainer.appendChild(front);
+            wordContainer.appendChild(top);
+            cube.appendChild(wordContainer);
+            containers.push(wordContainer);
+
+            if (wordIndex < words.length - 1) {
+              cube.appendChild(document.createTextNode(' '));
+            }
+          });
+        }
+
+        else if (mode === 'chars') {
+          [...line].forEach((char) => {
+            const charContainer = document.createElement('div');
+            charContainer.className = 'text-char-container';
+
+            const front = document.createElement('span');
+            front.className = 'text-char char-front';
+            front.innerHTML = char === ' ' ? '&nbsp;' : char;
+
+            const top = document.createElement('span');
+            top.className = 'text-char char-top';
+            top.innerHTML = char === ' ' ? '&nbsp;' : char;
+
+            charContainer.appendChild(front);
+            charContainer.appendChild(top);
+            cube.appendChild(charContainer);
+            containers.push(charContainer);
+          });
+        }
+
+        if (lineIndex < lines.length - 1) {
+          cube.appendChild(document.createElement('br'));
+        }
+      });
+
+      cube._cubeContainers = containers;
+      cube._cubeMode = mode;
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const cube = entry.target;
+          const mode = cube._cubeMode;
+          const containers = cube._cubeContainers;
+
+          containers.forEach((container, index) => {
+            setTimeout(() => {
+              const base = mode === 'chars' ? 'char' : mode === 'words' ? 'word' : 'line';
+              const front = container.querySelector(`.${base}-front`);
+              const top = container.querySelector(`.${base}-top`);
+
+              front.style.transform = 'rotateX(-95deg) translateY(0.3em) translateZ(0.15em)';
+              front.style.opacity = '0';
+              top.style.transform = 'rotateX(0deg) translateY(0em) translateZ(0em)';
+              top.style.opacity = '1';
+            }, index * (mode === 'chars' ? 50 : mode === 'words' ? 200 : 100));
+          });
+
+          observer.unobserve(cube);
+        }
+      });
+    }, {
+      threshold: 0.35,
+    });
+
+    cubes.forEach((cube) => observer.observe(cube));
+  });
+  </script>
+</body>
+</html>
