@@ -58,5 +58,12 @@
     "path": "animations/horizontalCounter.html",
     "width": "35vw",
     "height": "16vw"
+  },
+  {
+    "id": "8",
+    "title": "buttonHover1",
+    "type": "button",
+    "subtypes": ["hover"],
+    "path": "animations/buttonHover1.html"
   }
 ]
