@@ -47,6 +47,16 @@
     "type": "border",
     "subtypes": [""],
     "path": "animations/inputWave.html",
-    "width": "35vw"
+    "width": "35vw",
+    "height": "16vw"
+  },
+  {
+    "id": "7",
+    "title": "horizontalCounter",
+    "type": "text",
+    "subtypes": ["appear"],
+    "path": "animations/horizontalCounter.html",
+    "width": "35vw",
+    "height": "16vw"
   }
 ]

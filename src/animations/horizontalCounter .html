@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Horizontal Counter</title>
+
+    <style>
+        p {
+            font-size: 5vw !important;
+        }
+
+        [number] {
+            display: flex;
+        }
+
+        .digit-wrap {
+            width: 0.5em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .digit-container {
+            display: flex;
+            transition: transform 2s ease-in-out;
+        }
+
+        .digit-container span {
+            min-width: 0.5em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<p number>123456789</p>
+
+<script>
+    const numberElements = document.querySelectorAll('[number]');
+
+    function initializeNumber(element) {
+        let initialNumber = element.getAttribute('data-initial') || '0';
+        const finalNumber = element.textContent.trim() || '0';
+        element.textContent = '';
+
+        const maxLength = Math.max(initialNumber.length, finalNumber.length);
+        initialNumber = initialNumber.padStart(maxLength, '0');
+
+        initialNumber.split('').forEach(() => {
+            const digitWrap = document.createElement('div');
+            digitWrap.className = 'digit-wrap';
+
+            const digitContainer = document.createElement('div');
+            digitContainer.className = 'digit-container';
+
+            for (let i = 0; i <= 9; i++) {
+                const span = document.createElement('span');
+                span.textContent = i;
+                digitContainer.appendChild(span);
+            }
+            const extraZero = document.createElement('span');
+            extraZero.textContent = '0';
+            digitContainer.appendChild(extraZero);
+
+            digitContainer.style.transform = `translateX(0em)`;
+
+            digitWrap.appendChild(digitContainer);
+            element.appendChild(digitWrap);
+        });
+
+        return finalNumber.padStart(maxLength, '0');
+    }
+
+    function animateToFinalNumber(element, finalNumber) {
+        finalNumber.split('').forEach((finalDigit, index) => {
+            const digitWrap = element.children[index];
+            const digitContainer = digitWrap.querySelector('.digit-container');
+            const finalDigitValue = parseInt(finalDigit, 10);
+
+            const delay = index * 0.1;
+
+            setTimeout(() => {
+                const targetPosition = finalDigitValue === 0 ? -5.0 : -finalDigitValue * 0.5;
+                digitContainer.style.transform = `translateX(${targetPosition}em)`;
+            }, delay * 1000);
+        });
+    }
+
+    numberElements.forEach((numberEl) => {
+        const finalNumber = initializeNumber(numberEl);
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateToFinalNumber(numberEl, finalNumber);
+                        observer.unobserve(numberEl);
+                    }
+                });
+            },
+            {
+                threshold: 0.35,
+            }
+        );
+
+        observer.observe(numberEl);
+    });
+</script>
+</body>
+</html>
