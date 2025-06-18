@@ -51,7 +51,7 @@
         width: 300%;
         height: 160%;
         position: absolute;
-        inset: auto 0% 0%;
+        inset: auto 0 0;
         background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIGQ9Ik0wLDU2LjVjMCwwLDI5OC42NjYsMCwzOTkuMzMzLDBDNDQ4LjMzNiw1Ni41LDUxMy45OTQsNDYsNTk3LDQ2Yzc3LjMyNywwLDEzNSwxMC41LDIwMC45OTksMTAuNWM5NS45OTYsMCw0MDIuMDAxLDAsNDAyLjAwMSwwIj48L3BhdGg+PC9zdmc+);
         background-position: center bottom;
         background-repeat: repeat-x;
@@ -71,13 +71,17 @@
 </head>
 <body>
 <div class="field-wrapper">
-  <input type="text" class="input-field" placeholder="Enter your text here">
-  <div class="input-border"></div>
+    <label>
+        <input type="text" class="input-field" placeholder="Enter your text here">
+    </label>
+    <div class="input-border"></div>
 </div>
 
 <div class="field-wrapper">
-  <textarea class="input-field" placeholder="Textarea field" style="height: 80px;"></textarea>
-  <div class="input-border"></div>
+    <label>
+        <textarea class="input-field" placeholder="Textarea field" style="height: 80px;"></textarea>
+    </label>
+    <div class="input-border"></div>
 </div>
 
 <script>
