@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Cubic text animation</title>
-    <!-- css обов'язковий (крім стилів body i h2);
+    <!-- css обов'язковий (крім розміру тексту);
          до елемента додай атрибут `cube-animation` і обери значення атрибута:
          "line", "words" або "chars", в залежності від бажаного типу анімації;
          P.S. Для розбиття рядків бажано використовувати `<br>` -->
     <style>
-      body {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-      }
-      h2 {
+      p {
         font-size: 2em !important;
       }
 
@@ -62,9 +57,9 @@
 
 </head>
 <body>
-<h2 cube-animation="line">LINE ANIMATION</h2>
-<h2 cube-animation="words">WORD ANIMATION</h2>
-<h2 cube-animation="chars">CHARACTER ANIMATION</h2>
+<p cube-animation="line">LINE ANIMATION</p>
+<p cube-animation="words">WORD ANIMATION</p>
+<p cube-animation="chars">CHARACTER ANIMATION</p>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
