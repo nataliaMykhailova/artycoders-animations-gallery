@@ -36,45 +36,53 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const elements = document.querySelectorAll("[animation-type]");
+    document.addEventListener("DOMContentLoaded", () => {
+        gsap.registerPlugin(ScrollTrigger);
 
-    elements.forEach((el) => {
-      const splitType = el.getAttribute("split-type") || "char";
-      const animationType = el.getAttribute("animation-type");
+        const elements = document.querySelectorAll("[animation-type]");
 
-      if (splitType !== "none") {
-        new SplitType(el, {
-          types: splitType,
-          tagName: "span",
+        elements.forEach((el) => {
+            const animationType = el.getAttribute("animation-type");
+            const splitType = el.getAttribute("split-type") || "char";
+
+            // Only apply for inset-based clip-paths
+            const clipMap = {
+                "clip-up": "inset(0 0 100% 0)",
+                "clip-down": "inset(100% 0 0 0)",
+                "clip-left": "inset(0 100% 0 0)",
+                "clip-right": "inset(0 0 0 100%)",
+            };
+
+            if (!(animationType in clipMap)) return;
+
+            if (splitType !== "none") {
+                new SplitType(el, {
+                    types: splitType,
+                    tagName: "span",
+                });
+            }
+
+            const selectors = {
+                char: ".char",
+                word: ".word",
+                line: ".line",
+            };
+
+            const targets = splitType === "none" ? [el] : el.querySelectorAll(selectors[splitType]);
+
+            gsap.from(targets, {
+                clipPath: clipMap[animationType],
+                duration: 2,
+                ease: "power2.out",
+                stagger: { amount: 0.6 },
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
         });
-      }
-
-      const selectors = {
-        char: ".char",
-        word: ".word",
-        line: ".line",
-      };
-
-      const targets = splitType === "none" ? [el] : el.querySelectorAll(selectors[splitType]);
-
-      let clipMap = {
-        "clip-up": "inset(0 0 100% 0)",
-        "clip-down": "inset(100% 0 0 0)",
-        "clip-left": "inset(0 100% 0 0)",
-        "clip-right": "inset(0 0 0 100%)",
-      };
-
-      const clipPath = clipMap[animationType] || "inset(0 0 100% 0)";
-
-      gsap.from(targets, {
-        clipPath: clipPath,
-        duration: 2,
-        ease: "power2.out",
-        stagger: { amount: 0.6 },
-      });
     });
-  });
 </script>
 
 </body>

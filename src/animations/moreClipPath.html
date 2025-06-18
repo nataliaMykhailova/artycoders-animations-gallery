@@ -38,69 +38,65 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    gsap.registerPlugin(ScrollTrigger);
+    document.addEventListener("DOMContentLoaded", () => {
+        gsap.registerPlugin(ScrollTrigger);
 
-    const elements = document.querySelectorAll("[animation-type]");
+        const elements = document.querySelectorAll("[animation-type]");
 
-    elements.forEach((el) => {
-      const splitType = el.getAttribute("split-type") || "char";
-      const animationType = el.getAttribute("animation-type");
+        elements.forEach((el) => {
+            const animationType = el.getAttribute("animation-type");
+            const splitType = el.getAttribute("split-type") || "char";
 
-      if (splitType !== "none") {
-        new SplitType(el, {
-          types: splitType,
-          tagName: "span",
+            // Only apply for shape-based clip-paths
+            const clipShapeStart = {
+                "circle-reveal":   "circle(0% at 50% 50%)",
+                "ellipse-reveal":  "ellipse(0% 0% at 50% 50%)",
+                "diagonal-reveal": "polygon(0% 0%, 0% 0%, 100% 0%, 100% 0%)",
+                "cube-reveal":     "polygon(0% 0%, 25% 0%, 25% 25%, 0% 25%)",
+            };
+
+            const clipShapeEnd = {
+                "circle-reveal":   "circle(100% at 50% 50%)",
+                "ellipse-reveal":  "ellipse(100% 100% at 50% 50%)",
+                "diagonal-reveal": "polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)",
+                "cube-reveal":     "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            };
+
+            if (!(animationType in clipShapeStart)) return;
+
+            if (splitType !== "none") {
+                new SplitType(el, {
+                    types: splitType,
+                    tagName: "span",
+                });
+            }
+
+            const selectors = {
+                char: ".char",
+                word: ".word",
+                line: ".line",
+            };
+
+            const targets = splitType === "none" ? [el] : el.querySelectorAll(selectors[splitType]);
+
+            gsap.set(targets, {
+                clipPath: clipShapeStart[animationType],
+                autoAlpha: 1,
+            });
+
+            gsap.to(targets, {
+                clipPath: clipShapeEnd[animationType],
+                duration: 2.5,
+                ease: "power2.out",
+                stagger: { amount: 0.6 },
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 80%",
+                    toggleActions: "play none none none",
+                },
+            });
         });
-      }
-
-      const selectors = {
-        char: ".char",
-        word: ".word",
-        line: ".line",
-      };
-
-      const targets = splitType === "none" ? [el] : el.querySelectorAll(selectors[splitType]);
-
-      // Special clip shapes
-      const clipShapeStart = {
-        "circle-reveal":   "circle(0% at 50% 50%)",
-        "ellipse-reveal":  "ellipse(0% 0% at 50% 50%)",
-        "diagonal-reveal": "polygon(0% 0%, 0% 0%, 100% 0%, 100% 0%)",
-        "cube-reveal":     "polygon(0% 0%, 25% 0%, 25% 25%, 0% 25%)",
-      };
-
-      const clipShapeEnd = {
-        "circle-reveal":   "circle(100% at 50% 50%)",
-        "ellipse-reveal":  "ellipse(100% 100% at 50% 50%)",
-        "diagonal-reveal": "polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)",
-        "cube-reveal":     "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      };
-
-      const clipPathFrom = clipShapeStart[animationType];
-      const clipPathTo = clipShapeEnd[animationType];
-
-      if (clipPathFrom) {
-        // Set initial state
-        gsap.set(targets, {
-          clipPath: clipPathFrom,
-          autoAlpha: 1,
-        });
-      }
-
-      gsap.to(targets, {
-        clipPath: clipPathTo,
-        duration: 2.5,
-        ease: "power2.out",
-        stagger: { amount: 0.6 },
-        scrollTrigger: {
-          trigger: el,
-          start: "top 80%",
-          toggleActions: "play none none none",
-        },
-      });
     });
-  });
 </script>
 
 </body>
