@@ -10,47 +10,50 @@
             display: flex;
             flex-direction: column;
             gap: 1em;
+            font-size: 1em;
         }
-      .input-field {
-        border: none !important; /* треба додати */
-        width: 100%;
-        outline: none !important; /* треба додати */
-        min-height: 4em !important; /* бажано додати, але міняти в залежності від вимог дизайну */
-      }
 
-      .field-wrapper {
-        position: relative;
-        overflow: hidden;
-        width: 300px; /* можна міняти */
-      }
+        .input-field {
+            border: none !important; /* треба додати */
+            resize: none;
+            width: 100%;
+            outline: none !important; /* треба додати */
+            min-height: 4em !important; /* бажано додати, але міняти в залежності від вимог дизайну */
+        }
 
-      .input-border {
-        width: 300%;
-        min-height: 80px;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIGQ9Ik0wLDU2LjVjMCwwLDI5OC42NjYsMCwzOTkuMzMzLDBDNDQ4LjMzNiw1Ni41LDUxMy45OTQsNDYsNTk3LDQ2Yzc3LjMyNywwLDEzNSwxMC41LDIwMC45OTksMTAuNWM5NS45OTYsMCw0MDIuMDAxLDAsNDAyLjAwMSwwIj48L3BhdGg+PC9zdmc+);
-        background-position: center bottom;
-        background-repeat: repeat-x;
-        pointer-events: none;
-        touch-action: none;
-        opacity: 0.3;
-        transform: translateX(-66.66%);
-        transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
-      }
+        .field-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%; /* можна міняти */
+        }
 
-      .input-border.active {
-        transform: translateX(0);
-        opacity: 1;
-        transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
-      }
+        .input-border {
+            width: 300%;
+            min-height: 80px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDYwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIGQ9Ik0wLDU2LjVjMCwwLDI5OC42NjYsMCwzOTkuMzMzLDBDNDQ4LjMzNiw1Ni41LDUxMy45OTQsNDYsNTk3LDQ2Yzc3LjMyNywwLDEzNSwxMC41LDIwMC45OTksMTAuNWM5NS45OTYsMCw0MDIuMDAxLDAsNDAyLjAwMSwwIj48L3BhdGg+PC9zdmc+);
+            background-position: center bottom;
+            background-repeat: repeat-x;
+            pointer-events: none;
+            touch-action: none;
+            opacity: 0.3;
+            transform: translateX(-66.66%);
+            transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
+        }
 
-      .input-border.inactive {
-        opacity: 0.3;
-        transform: translateX(-66.66%);
-        transition: opacity 0.5s, transform 0s;
-      }
+        .input-border.active {
+            transform: translateX(0);
+            opacity: 1;
+            transition: transform 1s cubic-bezier(0, .25, .5, 1), opacity 0.5s;
+        }
+
+        .input-border.inactive {
+            opacity: 0.3;
+            transform: translateX(-66.66%);
+            transition: opacity 0.5s, transform 0s;
+        }
     </style>
 </head>
 <body>
