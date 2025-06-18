@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Wavy border animation</title>
-
+    <!-- обгорни елемент input у .field-wrapper і додати всередину ще .input-border;
+         стилі .input-field додавати не треба, однак всі інші варто-->
     <style>
       .input-field {
         border: none !important;
@@ -11,18 +12,18 @@
         min-height: 40px;
         width: 100%;
         padding: 10px;
+        font-size: 3vw;
       }
 
       .field-wrapper {
         position: relative;
         overflow: hidden;
-        margin: 20px;
-        width: 300px;
+        width: 300px; /* можна міняти */
       }
 
       .input-border {
         width: 300%;
-        min-height: 80px;
+        min-height: 80px; /* міняти в залежності від висоти input */
         position: absolute;
         left: 0;
         bottom: 0;
@@ -43,25 +44,6 @@
       }
 
       .input-border-active {
-        -webkit-text-size-adjust: 100%;
-        --brand-white: #ececec;
-        --brand-black: #191a19;
-        --pink: #e54b8d;
-        --white: white;
-        --black: black;
-        --blue: #c0fcf8;
-        --dark-grey: #333;
-        --light-grey: #999;
-        color: var(--brand-black);
-        font-family: Ppneuemontreal, sans-serif;
-        font-weight: 500;
-        line-height: 140%;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-        text-align: center;
-        letter-spacing: -.02em;
-        text-transform: uppercase;
-        font-size: .83vw;
         box-sizing: border-box;
         width: 300%;
         height: 160%;
@@ -80,18 +62,13 @@
       .input-border.inactive {
         opacity: 0.3;
         transform: translateX(-66.66%);
-        transition: opacity 0.5s, transform 0s; /* Stops animation for transform */
+        transition: opacity 0.5s, transform 0s;
       }
     </style>
 </head>
 <body>
 <div class="field-wrapper">
   <input type="text" class="input-field" placeholder="Enter your text here">
-  <div class="input-border"></div>
-</div>
-
-<div class="field-wrapper">
-  <input type="text" class="input-field" placeholder="Another input field">
   <div class="input-border"></div>
 </div>
 
