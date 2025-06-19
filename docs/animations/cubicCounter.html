@@ -130,7 +130,16 @@
       });
     }
 
-    startAnimations();
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  startAnimations();
+                  observer.unobserve(entry.target);
+              }
+          });
+      }, { threshold: 0.3 });
+
+      observer.observe(digitAnimation);
   });
 </script>
 </body>
