@@ -93,7 +93,7 @@
     "subtypes": ["appear"],
     "path": "animations/plainClipPath.html",
     "width": "37vw",
-    "height": "27vw"
+    "height": "12vw"
   },
   {
     "id": "12",
@@ -102,6 +102,6 @@
     "subtypes": ["appear"],
     "path": "animations/moreClipPath.html",
     "width": "37vw",
-    "height": "27vw"
+    "height": "12vw"
   }
 ]
