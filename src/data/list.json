@@ -56,7 +56,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/horizontalCounter.html",
-    "width": "16vw",
+    "width": "15vw",
     "height": "12vw"
   },
   {
@@ -65,7 +65,7 @@
     "type": "button",
     "subtypes": ["hover"],
     "path": "animations/buttonHover1.html",
-    "width": "16vw",
+    "width": "15vw",
     "height": "12vw"
   },
   {
@@ -74,7 +74,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/verticalCounter.html",
-    "width": "16vw",
+    "width": "15vw",
     "height": "12vw"
   },
   {
@@ -83,7 +83,7 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/cubicCounter.html",
-    "width": "16vw",
+    "width": "15vw",
     "height": "12vw"
   },
   {
@@ -101,6 +101,15 @@
     "type": "text",
     "subtypes": ["appear"],
     "path": "animations/moreClipPath.html",
+    "width": "40vw",
+    "height": "17vw"
+  },
+  {
+    "id": "13",
+    "title": "textScrolling",
+    "type": "text",
+    "subtypes": ["appear"],
+    "path": "animations/textScrolling.html",
     "width": "40vw",
     "height": "17vw"
   }

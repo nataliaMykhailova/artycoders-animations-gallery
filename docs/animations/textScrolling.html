@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text scrolling animation</title>
+
+  <style>
+    body {
+      font-size: 2rem;
+      padding: 20vw 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      gap: 4rem;
+    }
+  </style>
+
+</head>
+<body>
+
+<div text-effect="color">Літери змінюють колір<br>під час прокрутки.</div>
+<div text-effect="opacity">Літери поступово<br>появляються.</div>
+<div text-effect="move-y">Літери піднімаються<br>знизу вгору.</div>
+<div text-effect="spacing">Змінюється відстань<br>між літерами.</div>
+<div text-effect="skew">Літери нахиляються<br>під кутом.</div>
+<div text-effect="scale">Літери масштабуються<br>під час з’явлення.</div>
+<div text-effect="clip-up">Літери розгортаються<br>зверху вниз.</div>
+<div text-effect="blur">Літери появляються<br>з блюру.</div>
+<div text-effect="rainbow">Крізь літери появляється<br>анімація веселки.</div>
+
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const blocks = document.querySelectorAll("[text-effect]");
+
+    blocks.forEach((el) => {
+      const type = el.getAttribute("text-effect");
+
+      new SplitType(el, { types: "words, chars", tagName: "span" });
+
+      const targets = el.querySelectorAll(".char");
+
+      let animationProps = {
+        duration: 1,
+        ease: "power2.out",
+        stagger: { amount: 2 },
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+          end: "bottom center",
+          scrub: 2,
+        },
+      };
+
+      // Define effect-specific props
+      switch (type) {
+        case "color":
+          animationProps.color = "#6861FF";
+          break;
+        case "opacity":
+          animationProps.opacity = 0;
+          break;
+        case "move-y":
+          animationProps.y = 10;
+          animationProps.opacity = 0;
+          break;
+        case "spacing":
+          animationProps.letterSpacing = "0.4em";
+          break;
+        case "skew":
+          animationProps.skewX = -20;
+          break;
+        case "scale":
+          animationProps.scale = 0.5;
+          break;
+        case "clip-up":
+          gsap.set(targets, {
+            clipPath: "inset(0 0 0% 0)",
+          });
+          animationProps.clipPath = "inset(0 0 100% 0)";
+          break;
+        case "blur":
+          animationProps.filter = "blur(3px)"
+          break;
+        case "rainbow":
+          gsap.set(targets, {
+            color: "#6861FF",
+            filter: "hue-rotate(0deg)",
+          });
+          animationProps.filter = "hue-rotate(360deg)";
+          break;
+        default:
+          return;
+      }
+
+      gsap.from(targets, animationProps);
+    });
+  });
+</script>
+
+</body>
+</html>
