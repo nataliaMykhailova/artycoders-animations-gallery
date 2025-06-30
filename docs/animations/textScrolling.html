@@ -23,16 +23,16 @@
 <div style="height: 31vw; text-align: start">scroll down<br>
     окрім букв, можна анімувати також слова, рядки або весь елемент цілком<br>
     крім того можна поєднувати анімації.</div>
-<div text-effect="color">Літери змінюють колір<br>під час прокрутки.</div>
-<div text-effect="opacity">Літери поступово<br>появляються.</div>
-<div text-effect="move-y">Літери піднімаються<br>знизу вгору.</div>
-<div text-effect="spacing">Змінюється відстань<br>між літерами.</div>
-<div text-effect="skew">Літери нахиляються<br>під кутом.</div>
-<div text-effect="scale">Літери масштабуються<br>під час з’явлення.</div>
-<div text-effect="clip-up">Літери розгортаються<br>зверху вниз.</div>
-<div text-effect="blur">Літери появляються<br>з блюру.</div>
-<div text-effect="rainbow">Крізь літери появляється<br>анімація веселки.</div>
-<div text-effect="shadow">Літери появляються із<br>тінями різних кольорів.</div>
+<div data-text-effect="color">Літери змінюють колір<br>під час прокрутки.</div>
+<div data-text-effect="opacity">Літери поступово<br>появляються.</div>
+<div data-text-effect="move-y">Літери піднімаються<br>знизу вгору.</div>
+<div data-text-effect="spacing">Змінюється відстань<br>між літерами.</div>
+<div data-text-effect="skew">Літери нахиляються<br>під кутом.</div>
+<div data-text-effect="scale">Літери масштабуються<br>під час з’явлення.</div>
+<div data-text-effect="clip-up">Літери розгортаються<br>зверху вниз.</div>
+<div data-text-effect="blur">Літери появляються<br>з блюру.</div>
+<div data-text-effect="rainbow">Крізь літери появляється<br>анімація веселки.</div>
+<div data-text-effect="shadow">Літери появляються із<br>тінями різних кольорів.</div>
 
 <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -42,10 +42,10 @@
   document.addEventListener("DOMContentLoaded", () => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const blocks = document.querySelectorAll("[text-effect]");
+    const blocks = document.querySelectorAll("[data-text-effect]");
 
     blocks.forEach((el) => {
-      const type = el.getAttribute("text-effect");
+      const type = el.getAttribute("data-text-effect");
 
       new SplitType(el, { types: "words, chars", tagName: "span" });
 
