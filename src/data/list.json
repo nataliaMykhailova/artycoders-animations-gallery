@@ -125,7 +125,7 @@
   {
     "id": "15",
     "title": "linkWave",
-    "type": "link",
+    "type": "text",
     "subtypes": ["hover"],
     "path": "animations/linkWave.html",
     "width": "15vw",
@@ -137,7 +137,7 @@
     "type": "button",
     "subtypes": ["hover"],
     "path": "animations/buttonHover2.html",
-    "width": "15vw",
-    "height": "12vw"
+    "width": "40vw",
+    "height": "17vw"
   }
 ]
