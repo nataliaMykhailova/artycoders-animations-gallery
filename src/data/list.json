@@ -121,5 +121,14 @@
     "path": "animations/gsapCarousel.html",
     "width": "80vw",
     "height": "70vh"
+  },
+  {
+    "id": "15",
+    "title": "linkWave",
+    "type": "slide",
+    "subtypes": [""],
+    "path": "animations/linkWave.html",
+    "width": "15vw",
+    "height": "12vw"
   }
 ]
