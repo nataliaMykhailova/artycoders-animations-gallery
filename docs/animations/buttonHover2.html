@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Button</title>
+  <style>
+    .button {
+      text-transform: uppercase;
+      color: #fff;
+      border-radius: .5vw;
+      height: 3.8vw;
+      transition: transform .2s;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      max-width: 17vw;
+    }
+
+    .text-button {
+      font-size: 2em;
+      background-image: linear-gradient(to bottom, rgba(12, 12, 12, 1), rgba(12, 12, 12, 1)),
+      url('https://uploads-ssl.webflow.com/66424c6fe88472b64e8fc8fe/666c70ab1cb7dd40c3a663c7_giphy%20(2).webp');
+      transition: background-image 0.3s ease;
+      color: black;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .button:hover .text-button {
+      background-image: linear-gradient(to bottom, rgba(255, 48, 135, 0.5), rgba(255, 48, 135, 0.5)),
+      url('https://uploads-ssl.webflow.com/66424c6fe88472b64e8fc8fe/666c70ab1cb7dd40c3a663c7_giphy%20(2).webp');
+    }
+
+    .text-button.has--color-beige {
+      background-image: linear-gradient(to bottom, rgba(255,236,215, 1), rgba(255,236,215, 1)),
+      url('https://uploads-ssl.webflow.com/66424c6fe88472b64e8fc8fe/666c70ab1cb7dd40c3a663c7_giphy%20(2).webp');
+      color: #000;
+    }
+
+    .button:hover .text-button.has--color-beige {
+      background-image: linear-gradient(to bottom, rgba(255, 48, 135, 0.5), rgba(255, 48, 135, 0.5)),
+      url('https://uploads-ssl.webflow.com/66424c6fe88472b64e8fc8fe/666c70ab1cb7dd40c3a663c7_giphy%20(2).webp');
+    }
+
+    .button-inner {
+      z-index: 1;
+      background-color: #FFECD7;
+      min-width: 70%;
+      transition: min-width 0.3s ease;
+      transform-origin: 50% 100%;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      border-radius: .6vw;
+      padding-left: .5vw;
+      padding-right: .4vw;
+      display: flex;
+      position: relative;
+      transform: perspective(1000px);
+    }
+
+    .button-arrow-wrapper {
+      z-index: -1;
+      transform-origin: 50% 0;
+      justify-content: center;
+      align-items: center;
+      width: 4.3vw;
+      height: 100%;
+      display: flex;
+      position: relative;
+      inset: 0% 0% auto auto;
+      transform: perspective(1000px);
+    }
+
+    .button-arrow-block {
+      z-index: 0;
+      color: #FFECD7;
+      width: auto;
+      height: 101.5%;
+      position: absolute;
+      inset: 0% 0% auto auto;
+    }
+
+    .button-arrow {
+      z-index: 1;
+      width: 2.4vw;
+      height: auto;
+      position: relative;
+      bottom: 0%;
+      left: 3%;
+      transition: left 0.3s ease, bottom 0.3s ease;
+    }
+
+    .button:hover .button-inner {
+      min-width: 100%;
+    }
+
+    .button:hover .button-arrow {
+      left: 85%;
+      bottom: 85%;
+    }
+  </style>
+</head>
+<body>
+
+<a href="#" target="_blank" class="button is--footer pointer w-inline-block">
+  <div class="button-inner is--footer">
+    <p class="text-button is--footer">telegram</p>
+  </div>
+  <div class="button-arrow-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 48 39" fill="none" class="button-arrow-block">
+      <g clip-path="url(#clip0_1246_86)">
+        <mask id="mask0_1246_86" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="48" height="39">
+          <path d="M48 0H0V39H48V0Z" fill="white"></path>
+        </mask>
+        <g mask="url(#mask0_1246_86)">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M-198 5.06523C-198 2.26778 -195.732 0 -192.935 0H0.473419C2.37476 0 4.03142 1.04761 4.89767 2.59711C5.47106 3.62276 6.40881 4.55859 7.58386 4.55859C8.7589 4.55859 9.69663 3.62278 10.27 2.59714C11.1363 1.04766 12.7929 4.94001e-05 14.6943 4.94001e-05H43.0595C45.8569 4.94001e-05 48.1247 2.26783 48.1247 5.06527V33.4305C48.1247 36.2279 45.8569 38.4957 43.0595 38.4957H14.6943C12.7928 38.4957 11.1361 37.448 10.2699 35.8983C9.69655 34.8727 8.75885 33.9369 7.58383 33.9369C6.40883 33.9369 5.47113 34.8727 4.89781 35.8983C4.0316 37.4479 2.37486 38.4957 0.473419 38.4957H-192.935C-195.732 38.4957 -198 36.2279 -198 33.4304V5.06523Z" fill="currentColor"></path>
+        </g>
+      </g>
+      <defs>
+        <clipPath id="clip0_1246_86">
+          <rect width="48" height="39" fill="white"></rect>
+        </clipPath>
+      </defs>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none" class="button-arrow is--footer">
+      <path d="M22.4933 15.9655V1.43455L15.1155 8.85083C17.8092 6.14286 22.433 8.03037 22.462 11.8499L22.4933 15.9655Z" fill="#0C0C0C"></path>
+      <path d="M22.4933 1.43455L12.806 1.43455L7.96233 1.43455L12.0541 1.44936C15.9079 1.46331 17.8335 6.11862 15.1155 8.85083L22.4933 1.43455Z" fill="#0C0C0C"></path>
+      <path d="M1.34846 22.5794L15.1155 8.85084M22.4933 1.43455L12.806 1.43455L7.96233 1.43455M22.4933 1.43455L22.4933 15.9655M22.4933 1.43455L15.1155 8.85084M3.11867 1.43455L7.96233 1.43455M22.4933 20.8092V15.9655M7.96233 1.43455L12.0541 1.44936C15.9079 1.46331 17.8335 6.11862 15.1155 8.85084V8.85084M22.4933 15.9655L22.462 11.8499C22.433 8.03038 17.8092 6.14286 15.1155 8.85084V8.85084" stroke="#0C0C0C" stroke-width="2.25594" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </div>
+</a>
+
+</body>
+</html>
