@@ -139,5 +139,14 @@
     "path": "animations/buttonHover2.html",
     "width": "40vw",
     "height": "12vw"
+  },
+  {
+    "id": "16",
+    "title": "textPath",
+    "type": "text",
+    "subtypes": [""],
+    "path": "animations/textPath.html",
+    "width": "40vw",
+    "height": "12vw"
   }
 ]
