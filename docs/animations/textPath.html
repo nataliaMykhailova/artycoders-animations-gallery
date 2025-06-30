@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated TextPath</title>
+
+  <!-- Налаштування:
+       values — список форм (кадрів), через які проходить анімація.
+       keyTimes — коли кожен кадр відбувається (у % від тривалості).
+       calcMode="spline" — вмикає кастомну інтерполяцію через Bezier-криві.
+       keySplines — криві для кожного переходу між кадрами (4 значення: x1 y1 x2 y2).
+       repeatCount — скільки разів повторювати (`indefinite` — нескінченно).
+       dur — тривалість одного циклу.-->
+
+  <style>
+    body { /* стилі body не треба додати */
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 1em;
+    }
+
+    svg {
+      border-radius: 8px;
+      height: 3em;
+    }
+  </style>
+</head>
+<body>
+
+<svg viewBox="0 0 100 100">
+  <defs>
+    <path id="animPath1" d="M5,50 C30,20 70,80 95,50" fill="none">
+      <animate
+              attributeName="d"
+              values="M5,50 C30,20 70,80 95,50;M5,50 C30,50 70,50 95,50"
+              dur="3s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.4 0 0.6 1"
+              keyTimes="0;1" />
+    </path>
+  </defs>
+  <text>
+    <textPath href="#animPath1">JS Control with Bezier Interpolation</textPath>
+  </text>
+</svg>
+
+<svg viewBox="0 0 100 100">
+      <defs>
+        <path id="animPath3" d="M5,50 C30,10 70,90 95,50" fill="none">
+          <animate
+                  attributeName="d"
+                  values="M5,50 C30,10 70,90 95,50;M5,50 C30,30 70,70 95,50;M5,50 C30,50 70,50 95,50;M5,50 C30,70 70,30 95,50;M5,50 C30,90 70,10 95,50;M5,50 C30,10 70,90 95,50"
+                  dur="6s"
+                  repeatCount="indefinite"
+                  calcMode="spline"
+                  keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1"
+                  keyTimes="0;0.2;0.4;0.6;0.8;1"/>
+        </path>
+      </defs>
+      <text>
+        <textPath href="#animPath3">Continuous Loop with Easing</textPath>
+      </text>
+    </svg>
+
+    <svg id="svg2" viewBox="0 0 100 100">
+      <defs>
+        <path id="animPath2" d="M5,50 C30,10 70,90 95,50" fill="none"/>
+      </defs>
+      <text>
+        <textPath href="#animPath2">Animation on click</textPath>
+      </text>
+    </svg>
+    <button onclick="animateText2()">Animate</button>
+
+<script>
+  function animateText2() {
+    const path = document.getElementById('animPath2');
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function interpolatePath(t) {
+      const easedT = easeInOutCubic(t);
+
+      const c1y = 10 + (50 - 10) * easedT;
+      const c2y = 90 + (50 - 90) * easedT;
+
+      return `M5,50 C30,${c1y} 70,${c2y} 95,50`;
+    }
+
+    function animate(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      path.setAttribute('d', interpolatePath(progress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+</script>
+</body>
+</html>

@@ -116,7 +116,7 @@
   {
     "id": "14",
     "title": "gsapCarousel",
-    "type": "slide",
+    "type": "slider",
     "subtypes": [""],
     "path": "animations/gsapCarousel.html",
     "width": "80vw",
@@ -138,6 +138,6 @@
     "subtypes": ["hover"],
     "path": "animations/buttonHover2.html",
     "width": "40vw",
-    "height": "17vw"
+    "height": "12vw"
   }
 ]
