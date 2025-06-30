@@ -22,7 +22,7 @@
 
 <div style="height: 31vw; text-align: start">scroll down<br>
     окрім букв, можна анімувати також слова, рядки або весь елемент цілком<br>
-    крім того можна поєднувати анімаці.</div>
+    крім того можна поєднувати анімації.</div>
 <div text-effect="color">Літери змінюють колір<br>під час прокрутки.</div>
 <div text-effect="opacity">Літери поступово<br>появляються.</div>
 <div text-effect="move-y">Літери піднімаються<br>знизу вгору.</div>
@@ -32,6 +32,7 @@
 <div text-effect="clip-up">Літери розгортаються<br>зверху вниз.</div>
 <div text-effect="blur">Літери появляються<br>з блюру.</div>
 <div text-effect="rainbow">Крізь літери появляється<br>анімація веселки.</div>
+<div text-effect="shadow">Літери появляються із<br>тінями різних кольорів.</div>
 
 <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -62,7 +63,6 @@
         },
       };
 
-      // Define effect-specific props
       switch (type) {
         case "color":
           animationProps.color = "#6861FF";
@@ -100,7 +100,41 @@
           });
           animationProps.filter = "hue-rotate(360deg)";
           break;
-        default:
+          case "shadow":
+              gsap.timeline({
+                  scrollTrigger: {
+                      trigger: el,
+                      start: "top 85%",
+                      end: "bottom center",
+                      scrub: 2,
+                  },
+              })
+                  .fromTo(
+                      targets,
+                      {
+                          textShadow: "10px 0px rgba(255, 48, 135, 0), -10px 0px rgba(0, 0, 255, 0)",
+                          opacity: 0.1,
+                      },
+                      {
+                          textShadow: "0px 0px rgba(255, 48, 135, 0.6), 0px 0px rgba(0, 0, 255, 0.6)",
+                          opacity: 1,
+                          duration: 1,
+                          ease: "power4.inOut",
+                          stagger: { each: 0.04, from: "start" },
+                      }
+                  )
+                  .to(
+                      targets,
+                      {
+                          textShadow: "0px 0px rgba(255, 48, 135, 0.0), 0px 0px rgba(0, 0, 255, 0.0)",
+                          opacity: 1,
+                          duration: 1,
+                          ease: "power4.inOut",
+                          stagger: { each: 0.04, from: "start" },
+                      }
+                  );
+              return;
+          default:
           return;
       }
 
