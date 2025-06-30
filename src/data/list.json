@@ -112,5 +112,14 @@
     "path": "animations/textScrolling.html",
     "width": "40vw",
     "height": "17vw"
+  },
+  {
+    "id": "13",
+    "title": "gsapCarousel",
+    "type": "slider",
+    "subtypes": [""],
+    "path": "animations/gsapCarousel.html",
+    "width": "90vw",
+    "height": "80vh"
   }
 ]

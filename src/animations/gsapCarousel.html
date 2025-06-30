@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Project Carousel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>
+    <script src="https://assets.codepen.io/16327/InertiaPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            perspective: 2000px;
+            background: black;
+        }
+
+        .project-carousel {
+            transform-origin: 50% 50%;
+            width: 100vw;
+            transform-style: preserve-3d;
+            height: 100vh;
+            perspective: 2000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+        }
+
+        .project-carousel:active {
+            cursor: grabbing;
+        }
+
+        .project-wrap {
+            width: 200px;
+            height: 300px;
+            perspective: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .project-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            background-color: rgba(249, 249, 249, 0.96);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Control Panel */
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            z-index: 1000;
+            width: 300px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4facfe;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4facfe;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .value-display {
+            display: inline-block;
+            margin-left: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        }
+
+        .copy-btn {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 233, 123, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+<div class="controls">
+    <div class="control-group">
+        <label>Carousel Radius</label>
+        <input type="range" id="radiusSlider" min="200" max="800" value="400">
+        <span class="value-display" id="radiusValue">400px</span>
+    </div>
+
+    <div class="control-group">
+        <label>Animation Speed</label>
+        <input type="range" id="speedSlider" min="5" max="40" value="20">
+        <span class="value-display" id="speedValue">20s</span>
+    </div>
+
+    <div class="control-group">
+        <label>Drag Sensitivity</label>
+        <input type="range" id="sensitivitySlider" min="1000" max="10000" value="5000">
+        <span class="value-display" id="sensitivityValue">5000</span>
+    </div>
+
+    <div class="control-group">
+        <label>Inertia Resistance</label>
+        <input type="range" id="inertiaSlider" min="0.1" max="1" step="0.1" value="0.6">
+        <span class="value-display" id="inertiaValue">0.6</span>
+    </div>
+
+    <div class="control-group">
+        <label>Inner Card Rotation X</label>
+        <input type="range" id="innerRotXSlider" min="-45" max="45" value="0">
+        <span class="value-display" id="innerRotXValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <label>Inner Card Rotation Y</label>
+        <input type="range" id="innerRotYSlider" min="-45" max="45" value="0">
+        <span class="value-display" id="innerRotYValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <label>Inner Card Rotation Z</label>
+        <input type="range" id="innerRotZSlider" min="-45" max="45" value="0">
+        <span class="value-display" id="innerRotZValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <label>Carousel Rotation X</label>
+        <input type="range" id="carouselRotXSlider" min="-30" max="30" value="0">
+        <span class="value-display" id="carouselRotXValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <label>Carousel Rotation Y</label>
+        <input type="range" id="carouselRotYSlider" min="-30" max="30" value="0">
+        <span class="value-display" id="carouselRotYValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <label>Carousel Rotation Z</label>
+        <input type="range" id="carouselRotZSlider" min="-30" max="30" value="0">
+        <span class="value-display" id="carouselRotZValue">0°</span>
+    </div>
+
+    <div class="control-group">
+        <button class="toggle-btn" id="innerAnimToggle">Inner Animation: OFF</button>
+    </div>
+
+    <div class="control-group">
+        <button class="copy-btn" id="copyScriptBtn">📋 Copy Carousel Script</button>
+    </div>
+
+    <div class="control-group">
+        <button class="toggle-btn" id="autoRotateToggle">Auto Rotate: ON</button>
+    </div>
+</div>
+
+<div class="project-carousel">
+    <div class="project-wrap">
+        <div class="project-inner">Project 1</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 2</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 3</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 4</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 5</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 6</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 7</div>
+    </div>
+    <div class="project-wrap">
+        <div class="project-inner">Project 8</div>
+    </div>
+</div>
+
+<script>
+    function initProjectCarousel() {
+        gsap.registerPlugin(Draggable, InertiaPlugin);
+
+        const projectCards = gsap.utils.toArray(".project-wrap");
+        const projectInners = gsap.utils.toArray(".project-inner");
+        const totalCards = projectCards.length;
+
+        // Configuration object for easy adjustment
+        const config = {
+            carouselRadius: 400,
+            animationDuration: 20,
+            dragSensitivity: 5000,
+            inertiaResistance: 0.6,
+            autoRotate: true,
+            innerRotX: 0,
+            innerRotY: 0,
+            innerRotZ: 0,
+            innerAnimation: false,
+            carouselRotX: 0,
+            carouselRotY: 0,
+            carouselRotZ: 0
+        };
+
+        let initialProgress;
+        let spinAnimation;
+        let innerAnimation;
+        let draggableInstance;
+
+        const carouselWrapper = document.querySelector(".project-carousel");
+
+        function positionCards() {
+            projectCards.forEach((card, index) => {
+                const cardAngle = (360 / totalCards) * index;
+                const zPos = Math.cos((cardAngle * Math.PI) / 180) * config.carouselRadius;
+                const zIndex = Math.round(zPos + config.carouselRadius);
+
+                gsap.set(card, {
+                    rotationY: cardAngle,
+                    transformOrigin: `50% 50% ${-config.carouselRadius}px`,
+                    z: -config.carouselRadius,
+                    transformStyle: "preserve-3d",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: zIndex
+                });
+            });
+
+            updateInnerRotation();
+            updateCarouselRotation();
+        }
+
+        function updateCarouselRotation() {
+            gsap.set(carouselWrapper, {
+                rotationX: config.carouselRotX,
+                rotationY: config.carouselRotY,
+                rotationZ: config.carouselRotZ
+            });
+        }
+
+        function createSpinAnimation() {
+            if (spinAnimation) {
+                spinAnimation.kill();
+            }
+
+            if (!config.autoRotate) return;
+
+            spinAnimation = gsap.timeline({
+                repeat: -1,
+                ease: "none",
+                paused: false,
+                onUpdate: updateZIndex
+            });
+            spinAnimation.to(projectCards, {
+                rotationY: "-=360",
+                duration: config.animationDuration,
+                ease: "none",
+                modifiers: {
+                    rotationY: gsap.utils.unitize(n => parseFloat(n) % 360)
+                }
+            });
+        }
+
+        function updateZIndex() {
+            projectCards.forEach((card, index) => {
+                const currentRotY = gsap.getProperty(card, "rotationY");
+                const zPos = Math.cos((currentRotY * Math.PI) / 180) * config.carouselRadius;
+                const zIndex = Math.round(zPos + config.carouselRadius);
+                gsap.set(card, { zIndex: zIndex });
+            });
+        }
+
+        function updateInnerRotation() {
+            projectInners.forEach(inner => {
+                gsap.set(inner, {
+                    rotationX: config.innerRotX,
+                    rotationY: config.innerRotY,
+                    rotationZ: config.innerRotZ
+                });
+            });
+        }
+
+        function createInnerAnimation() {
+            if (innerAnimation) {
+                innerAnimation.kill();
+            }
+
+            if (!config.innerAnimation) return;
+
+            innerAnimation = gsap.timeline({ repeat: -1, ease: "none" });
+            innerAnimation.to(projectInners, {
+                rotationY: "+=360",
+                duration: 8,
+                ease: "none"
+            });
+        }
+
+        function createDraggable() {
+            if (draggableInstance) {
+                draggableInstance.kill();
+            }
+
+            const dragProxy = document.createElement("div");
+            const progressWrapper = gsap.utils.wrap(0, 1);
+
+            draggableInstance = Draggable.create(dragProxy, {
+                trigger: ".project-carousel",
+                type: "x",
+                inertia: true,
+                allowNativeTouchScrolling: true,
+                resistance: 1,
+                inertiaResistance: config.inertiaResistance,
+                dragResistance: 0.5,
+                onPress() {
+                    if (spinAnimation) {
+                        gsap.killTweensOf(spinAnimation);
+                        spinAnimation.timeScale(0);
+                        initialProgress = spinAnimation.progress();
+                    }
+                },
+                onDrag: updateCarouselRotation,
+                onThrowUpdate: updateCarouselRotation,
+                onRelease() {
+                    if (config.autoRotate && spinAnimation && (!this.tween || !this.tween.isActive())) {
+                        gsap.to(spinAnimation, { timeScale: 1, duration: 2 });
+                    }
+                },
+                onThrowComplete() {
+                    if (config.autoRotate && spinAnimation) {
+                        gsap.to(spinAnimation, { timeScale: 1, duration: 2 });
+                    }
+                }
+            })[0];
+
+            function updateCarouselRotation() {
+                const progressChange = (this.startX - this.x) / config.dragSensitivity;
+                if (spinAnimation) {
+                    spinAnimation.progress(progressWrapper(initialProgress + progressChange));
+                    updateZIndex();
+                }
+            }
+        }
+
+        function initCarousel() {
+            positionCards();
+            createSpinAnimation();
+            createInnerAnimation();
+            createDraggable();
+        }
+
+        // Control handlers
+        function setupControls() {
+            const radiusSlider = document.getElementById('radiusSlider');
+            const speedSlider = document.getElementById('speedSlider');
+            const sensitivitySlider = document.getElementById('sensitivitySlider');
+            const inertiaSlider = document.getElementById('inertiaSlider');
+            const innerRotXSlider = document.getElementById('innerRotXSlider');
+            const innerRotYSlider = document.getElementById('innerRotYSlider');
+            const innerRotZSlider = document.getElementById('innerRotZSlider');
+            const carouselRotXSlider = document.getElementById('carouselRotXSlider');
+            const carouselRotYSlider = document.getElementById('carouselRotYSlider');
+            const carouselRotZSlider = document.getElementById('carouselRotZSlider');
+            const autoRotateToggle = document.getElementById('autoRotateToggle');
+            const innerAnimToggle = document.getElementById('innerAnimToggle');
+            const copyScriptBtn = document.getElementById('copyScriptBtn');
+
+            const radiusValue = document.getElementById('radiusValue');
+            const speedValue = document.getElementById('speedValue');
+            const sensitivityValue = document.getElementById('sensitivityValue');
+            const inertiaValue = document.getElementById('inertiaValue');
+            const innerRotXValue = document.getElementById('innerRotXValue');
+            const innerRotYValue = document.getElementById('innerRotYValue');
+            const innerRotZValue = document.getElementById('innerRotZValue');
+            const carouselRotXValue = document.getElementById('carouselRotXValue');
+            const carouselRotYValue = document.getElementById('carouselRotYValue');
+            const carouselRotZValue = document.getElementById('carouselRotZValue');
+
+            radiusSlider.addEventListener('input', (e) => {
+                config.carouselRadius = parseInt(e.target.value);
+                radiusValue.textContent = config.carouselRadius + 'px';
+                positionCards();
+            });
+
+            speedSlider.addEventListener('input', (e) => {
+                config.animationDuration = parseInt(e.target.value);
+                speedValue.textContent = config.animationDuration + 's';
+                if (config.autoRotate) {
+                    createSpinAnimation();
+                }
+            });
+
+            sensitivitySlider.addEventListener('input', (e) => {
+                config.dragSensitivity = parseInt(e.target.value);
+                sensitivityValue.textContent = config.dragSensitivity;
+                createDraggable();
+            });
+
+            inertiaSlider.addEventListener('input', (e) => {
+                config.inertiaResistance = parseFloat(e.target.value);
+                inertiaValue.textContent = config.inertiaResistance;
+                createDraggable();
+            });
+
+            innerRotXSlider.addEventListener('input', (e) => {
+                config.innerRotX = parseInt(e.target.value);
+                innerRotXValue.textContent = config.innerRotX + '°';
+                updateInnerRotation();
+            });
+
+            innerRotYSlider.addEventListener('input', (e) => {
+                config.innerRotY = parseInt(e.target.value);
+                innerRotYValue.textContent = config.innerRotY + '°';
+                updateInnerRotation();
+            });
+
+            innerRotZSlider.addEventListener('input', (e) => {
+                config.innerRotZ = parseInt(e.target.value);
+                innerRotZValue.textContent = config.innerRotZ + '°';
+                updateInnerRotation();
+            });
+
+            carouselRotXSlider.addEventListener('input', (e) => {
+                config.carouselRotX = parseInt(e.target.value);
+                carouselRotXValue.textContent = config.carouselRotX + '°';
+                updateCarouselRotation();
+            });
+
+            carouselRotYSlider.addEventListener('input', (e) => {
+                config.carouselRotY = parseInt(e.target.value);
+                carouselRotYValue.textContent = config.carouselRotY + '°';
+                updateCarouselRotation();
+            });
+
+            carouselRotZSlider.addEventListener('input', (e) => {
+                config.carouselRotZ = parseInt(e.target.value);
+                carouselRotZValue.textContent = config.carouselRotZ + '°';
+                updateCarouselRotation();
+            });
+
+            autoRotateToggle.addEventListener('click', () => {
+                config.autoRotate = !config.autoRotate;
+                autoRotateToggle.textContent = `Auto Rotate: ${config.autoRotate ? 'ON' : 'OFF'}`;
+                autoRotateToggle.classList.toggle('active', !config.autoRotate);
+
+                if (config.autoRotate) {
+                    createSpinAnimation();
+                } else if (spinAnimation) {
+                    spinAnimation.kill();
+                    spinAnimation = null;
+                }
+            });
+
+            innerAnimToggle.addEventListener('click', () => {
+                config.innerAnimation = !config.innerAnimation;
+                innerAnimToggle.textContent = `Inner Animation: ${config.innerAnimation ? 'ON' : 'OFF'}`;
+                innerAnimToggle.classList.toggle('active', !config.innerAnimation);
+
+                if (config.innerAnimation) {
+                    createInnerAnimation();
+                } else if (innerAnimation) {
+                    innerAnimation.kill();
+                    innerAnimation = null;
+                }
+            });
+
+            copyScriptBtn.addEventListener('click', () => {
+                const scriptContent = generateCarouselScript();
+                navigator.clipboard.writeText(scriptContent).then(() => {
+                    const originalText = copyScriptBtn.textContent;
+                    copyScriptBtn.textContent = '✅ Copied!';
+                    copyScriptBtn.style.background = 'linear-gradient(45deg, #4facfe, #00f2fe)';
+                    setTimeout(() => {
+                        copyScriptBtn.textContent = originalText;
+                        copyScriptBtn.style.background = 'linear-gradient(45deg, #43e97b, #38f9d7)';
+                    }, 2000);
+                }).catch(() => {
+                    alert('Failed to copy. Please copy manually from console.');
+                    console.log(scriptContent);
+                });
+            });
+        }
+
+        function generateCarouselScript() {
+            return `function initProjectCarousel() {
+    gsap.registerPlugin(Draggable, InertiaPlugin);
+
+    const projectCards = gsap.utils.toArray(".project-wrap");
+    const projectInners = gsap.utils.toArray(".project-inner");
+    const totalCards = projectCards.length;
+
+    // Configuration - adjust these values as needed
+    const config = {
+        carouselRadius: ${config.carouselRadius},
+        animationDuration: ${config.animationDuration},
+        dragSensitivity: ${config.dragSensitivity},
+        inertiaResistance: ${config.inertiaResistance},
+        autoRotate: ${config.autoRotate},
+        innerRotX: ${config.innerRotX},
+        innerRotY: ${config.innerRotY},
+        innerRotZ: ${config.innerRotZ},
+        innerAnimation: ${config.innerAnimation},
+        carouselRotX: ${config.carouselRotX},
+        carouselRotY: ${config.carouselRotY},
+        carouselRotZ: ${config.carouselRotZ}
+    };
+
+    let initialProgress;
+    let spinAnimation;
+    let innerAnimation;
+    let draggableInstance;
+
+    const carouselWrapper = document.querySelector(".project-carousel");
+
+    function positionCards() {
+        projectCards.forEach((card, index) => {
+            const cardAngle = (360 / totalCards) * index;
+            const zPos = Math.cos((cardAngle * Math.PI) / 180) * config.carouselRadius;
+            const zIndex = Math.round(zPos + config.carouselRadius);
+
+            gsap.set(card, {
+                rotationY: cardAngle,
+                transformOrigin: \`50% 50% \${-config.carouselRadius}px\`,
+                z: -config.carouselRadius,
+                transformStyle: "preserve-3d",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: zIndex
+            });
+        });
+
+        updateInnerRotation();
+        updateCarouselRotation();
+    }
+
+    function updateCarouselRotation() {
+        gsap.set(carouselWrapper, {
+            rotationX: config.carouselRotX,
+            rotationY: config.carouselRotY,
+            rotationZ: config.carouselRotZ
+        });
+    }
+
+    function createSpinAnimation() {
+        if (spinAnimation) {
+            spinAnimation.kill();
+        }
+
+        if (!config.autoRotate) return;
+
+        spinAnimation = gsap.timeline({
+            repeat: -1,
+            ease: "none",
+            paused: false,
+            onUpdate: updateZIndex
+        });
+        spinAnimation.to(projectCards, {
+            rotationY: "-=360",
+            duration: config.animationDuration,
+            ease: "none",
+            modifiers: {
+                rotationY: gsap.utils.unitize(n => parseFloat(n) % 360)
+            }
+        });
+    }
+
+    function updateZIndex() {
+        projectCards.forEach((card, index) => {
+            const currentRotY = gsap.getProperty(card, "rotationY");
+            const zPos = Math.cos((currentRotY * Math.PI) / 180) * config.carouselRadius;
+            const zIndex = Math.round(zPos + config.carouselRadius);
+            gsap.set(card, { zIndex: zIndex });
+        });
+    }
+
+    function updateInnerRotation() {
+        projectInners.forEach(inner => {
+            gsap.set(inner, {
+                rotationX: config.innerRotX,
+                rotationY: config.innerRotY,
+                rotationZ: config.innerRotZ
+            });
+        });
+    }
+
+    function createInnerAnimation() {
+        if (innerAnimation) {
+            innerAnimation.kill();
+        }
+
+        if (!config.innerAnimation) return;
+
+        innerAnimation = gsap.timeline({ repeat: -1, ease: "none" });
+        innerAnimation.to(projectInners, {
+            rotationY: "+=360",
+            duration: 8,
+            ease: "none"
+        });
+    }
+
+    function createDraggable() {
+        if (draggableInstance) {
+            draggableInstance.kill();
+        }
+
+        const dragProxy = document.createElement("div");
+        const progressWrapper = gsap.utils.wrap(0, 1);
+
+        draggableInstance = Draggable.create(dragProxy, {
+            trigger: ".project-carousel",
+            type: "x",
+            inertia: true,
+            allowNativeTouchScrolling: true,
+            resistance: 1,
+            inertiaResistance: config.inertiaResistance,
+            dragResistance: 0.5,
+            onPress() {
+                if (spinAnimation) {
+                    gsap.killTweensOf(spinAnimation);
+                    spinAnimation.timeScale(0);
+                    initialProgress = spinAnimation.progress();
+                }
+            },
+            onDrag: updateCarouselRotation,
+            onThrowUpdate: updateCarouselRotation,
+            onRelease() {
+                if (config.autoRotate && spinAnimation && (!this.tween || !this.tween.isActive())) {
+                    gsap.to(spinAnimation, { timeScale: 1, duration: 2 });
+                }
+            },
+            onThrowComplete() {
+                if (config.autoRotate && spinAnimation) {
+                    gsap.to(spinAnimation, { timeScale: 1, duration: 2 });
+                }
+            }
+        })[0];
+
+        function updateCarouselRotation() {
+            const progressChange = (this.startX - this.x) / config.dragSensitivity;
+            if (spinAnimation) {
+                spinAnimation.progress(progressWrapper(initialProgress + progressChange));
+                updateZIndex();
+            }
+        }
+    }
+
+    function initCarousel() {
+        positionCards();
+        createSpinAnimation();
+        createInnerAnimation();
+        createDraggable();
+    }
+
+    initCarousel();
+
+    // Resize handler
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            initCarousel();
+        }, 100);
+    });
+}
+
+// Initialize when page loads
+window.addEventListener('load', initProjectCarousel);`;
+        }
+
+        initCarousel();
+        setupControls();
+
+        // Resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                initCarousel();
+            }, 100);
+        });
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', initProjectCarousel);
+</script>
+</body>
+</html>
