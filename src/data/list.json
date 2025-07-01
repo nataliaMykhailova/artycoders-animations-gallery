@@ -141,12 +141,21 @@
     "height": "12vw"
   },
   {
-    "id": "16",
+    "id": "17",
     "title": "textPath",
     "type": "text",
     "subtypes": [""],
     "path": "animations/textPath.html",
     "width": "40vw",
     "height": "12vw"
+  },
+  {
+    "id": "18",
+    "title": "marquee3D",
+    "type": "text",
+    "subtypes": [""],
+    "path": "animations/marquee3D.html",
+    "width": "80vw",
+    "height": "70vh"
   }
 ]

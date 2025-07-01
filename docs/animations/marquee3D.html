@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Marquee</title>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .square {
+            background-color: #fff;
+            border: 1px solid #000;
+            width: 60.5vw;
+            height: 54vh;
+            position: absolute;
+            inset: 23vh 0 0 19.8vw;
+        }
+
+        .square.left {
+            transform-origin: 50%;
+            transform-style: preserve-3d;
+            border-top-style: solid;
+            border-bottom-style: solid;
+            border-right-style: none;
+            height: 70.35vh;
+            top: 14.8vh;
+            left: -17.35vw;
+            transform: rotateX(0) rotateY(-86deg) rotateZ(0);
+        }
+
+        .square.right {
+            transform-origin: 50%;
+            transform-style: preserve-3d;
+            border-style: solid solid solid none;
+            height: 70.35vh;
+            top: 14.8vh;
+            left: auto;
+            right: -17.35vw;
+            transform: rotateX(0) rotateY(86deg) rotateZ(0);
+        }
+
+        .marquee-section {
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+        }
+
+        .marquee-container {
+            z-index: 0;
+            perspective: 100vw;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            display: flex;
+            position: relative;
+        }
+
+        .marquee-wrap {
+            width: 100vw;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .marquee-wrap.is--left {
+            z-index: 1;
+            transform-origin: 0;
+            transform-style: preserve-3d;
+            width: 160vw;
+            position: absolute;
+            inset: 0 auto auto 0;
+            transform: rotateX(0)rotateY(99.9deg)rotateZ(0);
+        }
+
+        .marquee-wrap.is--center {
+            z-index: 0;
+            width: 156.3vw;
+            min-width: 156.3vw;
+            position: relative;
+            transform: scale(.39);
+        }
+
+        .marquee-wrap.is--right {
+            z-index: 1;
+            transform-origin: 100%;
+            transform-style: preserve-3d;
+            width: 160vw;
+            position: absolute;
+            inset: 0 0 auto auto;
+            transform: rotateX(0)rotateY(-99.9deg)rotateZ(0);
+        }
+
+        .marquee-block {
+            flex: none;
+            display: flex;
+            animation: marqueeAnimation 90s linear infinite;
+        }
+
+        @keyframes marqueeAnimation {
+            from {
+                transform: translateX(0%);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .room-wrap {
+            z-index: -1;
+            perspective: 100vw;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+        }
+
+        img {
+            width: 55vh;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="marquee-section">
+    <div class="marquee-container">
+        <div class="marquee-wrap is--left">
+            <div class="marquee-block">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+            </div>
+        </div>
+        <div class="marquee-wrap is--center">
+            <div class="marquee-block">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+            </div>
+        </div>
+        <div class="marquee-wrap is--right">
+            <div class="marquee-block">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+                <img src="https://picsum.photos/200?random=1" alt="Random Image 1">
+                <img src="https://picsum.photos/200?random=2" alt="Random Image 2">
+                <img src="https://picsum.photos/200?random=3" alt="Random Image 3">
+                <img src="https://picsum.photos/200?random=4" alt="Random Image 4">
+                <img src="https://picsum.photos/200?random=5" alt="Random Image 5">
+            </div>
+        </div>
+    </div>
+    <div class="room-wrap">
+        <div class="square"></div>
+        <div class="square left"></div>
+        <div class="square right"></div>
+    </div>
+</div>
+</body>
+</html>
