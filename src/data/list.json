@@ -152,7 +152,7 @@
   {
     "id": "18",
     "title": "marquee3D",
-    "type": "text",
+    "type": "marquee",
     "subtypes": [""],
     "path": "animations/marquee3D.html",
     "width": "80vw",

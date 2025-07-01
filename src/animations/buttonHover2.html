@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>Animated Button</title>
   <style>
+    .button-wrapper {
+      max-width: 16.5em;
+    }
+
     .button {
       text-transform: uppercase;
       color: #fff;
@@ -14,7 +18,6 @@
       position: relative;
       overflow: hidden;
       text-decoration: none;
-      max-width: 17em;
     }
 
     .text-button {
@@ -44,7 +47,7 @@
       height: 100%;
       border-radius: 5px;
       padding-left: .5em;
-      padding-right: .4em;
+      padding-right: .5em;
       display: flex;
       position: relative;
       transform: perspective(1000px);
@@ -93,10 +96,10 @@
   </style>
 </head>
 <body>
-
+<div class="button-wrapper">
 <a href="#" target="_blank" class="button is--footer pointer w-inline-block">
   <div class="button-inner is--footer">
-    <p class="text-button is--footer">telegram</p>
+    <p class="text-button is--footer">hover</p>
   </div>
   <div class="button-arrow-wrapper">
     <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 48 39" fill="none" class="button-arrow-block">
@@ -121,6 +124,6 @@
     </svg>
   </div>
 </a>
-
+</div>
 </body>
 </html>
