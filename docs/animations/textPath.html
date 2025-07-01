@@ -29,84 +29,94 @@
 </head>
 <body>
 
-<svg viewBox="0 0 100 100">
-  <defs>
-    <path id="animPath1" d="M5,50 C30,20 70,80 95,50" fill="none">
-      <animate
-              attributeName="d"
-              values="M5,50 C30,20 70,80 95,50;M5,50 C30,50 70,50 95,50"
-              dur="3s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keySplines="0.4 0 0.6 1"
-              keyTimes="0;1" />
-    </path>
-  </defs>
-  <text>
-    <textPath href="#animPath1">JS Control with Bezier Interpolation</textPath>
-  </text>
+<svg viewBox="0 0 1000 100">
+    <defs>
+        <path id="animPath1" d="M0,50 C200,0 800,100 1000,50" fill="none">
+            <animate
+                    attributeName="d"
+                    values="M0,50 C200,0 800,100 1000,50;
+                M0,50 C200,50 800,50 1000,50"
+                    dur="3s"
+                    repeatCount="indefinite"
+                    calcMode="spline"
+                    keySplines="0.4 0 0.6 1"
+                    keyTimes="0;1" />
+        </path>
+    </defs>
+    <text>
+        <textPath href="#animPath1" startOffset="0%">loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop</textPath>
+    </text>
 </svg>
 
-<svg viewBox="0 0 100 100">
-      <defs>
-        <path id="animPath3" d="M5,50 C30,10 70,90 95,50" fill="none">
-          <animate
-                  attributeName="d"
-                  values="M5,50 C30,10 70,90 95,50;M5,50 C30,30 70,70 95,50;M5,50 C30,50 70,50 95,50;M5,50 C30,70 70,30 95,50;M5,50 C30,90 70,10 95,50;M5,50 C30,10 70,90 95,50"
-                  dur="6s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1"
-                  keyTimes="0;0.2;0.4;0.6;0.8;1"/>
+<svg viewBox="0 0 1000 100">
+    <defs>
+        <path id="animPath3" d="M0,50 C200,-30 800,130 1000,50" fill="none">
+            <animate
+                    attributeName="d"
+                    values="M0,50 C200,-30 800,130 1000,50;
+                M0,50 C200,0 800,100 1000,50;
+                M0,50 C200,50 800,50 1000,50;
+                M0,50 C200,100 800,0 1000,50;
+                M0,50 C200,130 800,-30 1000,50;
+                M0,50 C200,-30 800,130 1000,50"
+                    dur="6s"
+                    repeatCount="indefinite"
+                    calcMode="spline"
+                    keySplines="0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1;0.25 0.1 0.25 1"
+                    keyTimes="0;0.2;0.4;0.6;0.8;1"/>
         </path>
-      </defs>
-      <text>
-        <textPath href="#animPath3">Continuous Loop with Easing</textPath>
-      </text>
-    </svg>
+    </defs>
+    <text>
+        <textPath href="#animPath3" startOffset="0%">loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop loop</textPath>
+    </text>
+</svg>
 
-    <svg id="svg2" viewBox="0 0 100 100">
-      <defs>
-        <path id="animPath2" d="M5,50 C30,10 70,90 95,50" fill="none"/>
-      </defs>
-      <text>
-        <textPath href="#animPath2">Animation on click</textPath>
-      </text>
-    </svg>
-    <button onclick="animateText2()">Animate</button>
+<svg id="svg2" viewBox="0 0 1000 100">
+    <defs>
+        <path id="animPath2" d="M0,50 C250,0 750,100 1000,50" fill="none"/>
+    </defs>
+    <text>
+        <textPath href="#animPath2" startOffset="0%">click click click click click click click click click click click click click click click click click click click click click click click click click click click</textPath>
+    </text>
+</svg>
+<button onclick="animateText2()">Animate</button>
 
 <script>
-  function animateText2() {
-    const path = document.getElementById('animPath2');
-    const duration = 2000;
-    const startTime = performance.now();
+    function animateText2() {
+        const path = document.getElementById('animPath2');
+        const duration = 2000;
+        const startTime = performance.now();
 
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
+        function easeInOutCubic(t) {
+            return t < 0.5
+                ? 4 * t * t * t
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
 
-    function interpolatePath(t) {
-      const easedT = easeInOutCubic(t);
+        function interpolatePath(t) {
+            const easedT = easeInOutCubic(t);
 
-      const c1y = 10 + (50 - 10) * easedT;
-      const c2y = 90 + (50 - 90) * easedT;
+            // Animate control points Y positions from wavy to flat
+            const c1y = 0 + (50 - 0) * easedT;   // from 0 to 50
+            const c2y = 100 + (50 - 100) * easedT; // from 100 to 50
 
-      return `M5,50 C30,${c1y} 70,${c2y} 95,50`;
-    }
+            return `M0,50 C250,${c1y} 750,${c2y} 1000,50`;
+        }
 
-    function animate(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+        function animate(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
 
-      path.setAttribute('d', interpolatePath(progress));
+            path.setAttribute('d', interpolatePath(progress));
 
-      if (progress < 1) {
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        }
+
         requestAnimationFrame(animate);
-      }
     }
-
-    requestAnimationFrame(animate);
-  }
 </script>
+
 </body>
 </html>
