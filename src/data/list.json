@@ -191,7 +191,7 @@
     "type": "list",
     "subtypes": ["hover"],
     "path": "animations/listItemHover1.html",
-    "width": "60vw",
+    "width": "50vw",
     "height": "35vw"
   },
   {
@@ -200,7 +200,7 @@
     "type": "list",
     "subtypes": ["hover"],
     "path": "animations/listItemHover2.html",
-    "width": "60vw",
+    "width": "50vw",
     "height": "35vw"
   },
   {
