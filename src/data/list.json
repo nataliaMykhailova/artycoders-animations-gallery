@@ -157,5 +157,32 @@
     "path": "animations/marquee3D.html",
     "width": "80vw",
     "height": "70vh"
+  },
+  {
+    "id": "19",
+    "title": "circleButton1",
+    "type": "button",
+    "subtypes": [""],
+    "path": "animations/circleButton1.html",
+    "width": "15vw",
+    "height": "12vw"
+  },
+  {
+    "id": "20",
+    "title": "circleButton2",
+    "type": "button",
+    "subtypes": [""],
+    "path": "animations/circleButton2.html",
+    "width": "15vw",
+    "height": "12vw"
+  },
+  {
+    "id": "21",
+    "title": "circleButton3",
+    "type": "button",
+    "subtypes": [""],
+    "path": "animations/circleButton3.html",
+    "width": "15vw",
+    "height": "12vw"
   }
 ]
