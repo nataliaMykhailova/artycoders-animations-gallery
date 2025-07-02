@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 1em;
+        text-transform: uppercase;
+      }
+
+      .project-list {
+        display: flex;
+        flex-direction: column;
+        width: 50vw;
+        border-top: solid black 0.1vw;
+        border-bottom: solid black 0.1vw;
+      }
+
+      .project-block {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 5vw;
+        overflow: hidden;
+        color: black;
+        transition: color 0.3s;
+      }
+
+      .project-block:hover {
+        color: white;
+      }
+
+      .content {
+        position: absolute;
+        left: 0;
+        top: 0%;
+        width: 100%;
+        height: 4.88vw;
+        border-top: solid black 0.1vw;
+        border-bottom: solid black 0.1vw;
+      }
+
+      .divider {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0.05vw;
+        background-color: black;
+        z-index: -1;
+        transition: height 0.3s ease;
+      }
+
+      .divider.is--top {
+        top: 0;
+        bottom: auto;
+      }
+
+      .divider.is--bottom {
+        bottom: 0;
+        top: auto;
+      }
+    </style>
+</head>
+<body>
+<div class="project-list">
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+  <div class="project-block">
+    <div class="divider is--top"></div>
+    <div class="content">
+      <h2>Project Title</h2>
+    </div>
+    <div class="divider is--bottom"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function initializeHoverEffects() {
+      const projectBlocks = document.querySelectorAll('.project-block');
+
+      projectBlocks.forEach(function(block) {
+        let activeDivider = null;
+        let animationTimeout = null;
+
+        // Select both dividers
+        const bottomDivider = block.querySelector('.divider.is--bottom');
+        const topDivider = block.querySelector('.divider.is--top');
+
+        block.addEventListener('mouseenter', function(event) {
+          if (animationTimeout) clearTimeout(animationTimeout);
+
+          const blockHeight = block.offsetHeight;
+          const blockTop = block.getBoundingClientRect().top;
+          const hoverPosition = event.clientY - blockTop;
+
+          const isTopHalf = hoverPosition < blockHeight / 2;
+          const isBottomHalf = hoverPosition >= blockHeight / 2;
+
+          // Expand the bottom divider when entering from the bottom half
+          if (isBottomHalf && bottomDivider) {
+            activeDivider = bottomDivider;
+            bottomDivider.style.transition = 'height 0.3s ease'; // Faster hover-in transition
+            bottomDivider.style.height = '5vw';
+          }
+
+          // Expand the top divider when entering from the top half
+          if (isTopHalf && topDivider) {
+            activeDivider = topDivider;
+            topDivider.style.transition = 'height 0.3s ease'; // Faster hover-in transition
+            topDivider.style.height = '5vw';
+          }
+        });
+
+        block.addEventListener('mouseleave', function(event) {
+          if (!activeDivider) return;
+
+          const isFullyGrown = activeDivider.style.height === '5vw';
+          const blockHeight = block.offsetHeight;
+          const blockTop = block.getBoundingClientRect().top;
+          const hoverPosition = event.clientY - blockTop;
+
+          const isHoverOutFromTop = hoverPosition < blockHeight / 2;
+          const isHoverOutFromBottom = hoverPosition >= blockHeight / 2;
+
+          animationTimeout = setTimeout(function() {
+            // Handle the `bottomDivider` hover-out behavior
+            if (activeDivider === bottomDivider && isFullyGrown && isHoverOutFromTop) {
+              bottomDivider.style.transition = 'none'; // No transition for position change
+              bottomDivider.style.top = '0%';
+              bottomDivider.style.bottom = 'auto';
+
+              // Reset position to initial state after height shrinks back
+              bottomDivider.addEventListener('transitionend', function handleTransitionEnd() {
+                if (bottomDivider.style.height === '0.05vw') {
+                  bottomDivider.style.transition = 'none';
+                  bottomDivider.style.bottom = '0%';
+                  bottomDivider.style.top = 'auto';
+                  bottomDivider.removeEventListener('transitionend', handleTransitionEnd);
+                }
+              });
+            }
+
+            // Handle the `topDivider` hover-out behavior
+            if (activeDivider === topDivider && isFullyGrown && isHoverOutFromBottom) {
+              topDivider.style.transition = 'none'; // No transition for position change
+              topDivider.style.bottom = '0%';
+              topDivider.style.top = 'auto';
+
+              // Reset position to initial state after height shrinks back
+              topDivider.addEventListener('transitionend', function handleTransitionEnd() {
+                if (topDivider.style.height === '0.05vw') {
+                  topDivider.style.transition = 'none';
+                  topDivider.style.top = '0%';
+                  topDivider.style.bottom = 'auto';
+                  topDivider.removeEventListener('transitionend', handleTransitionEnd);
+                }
+              });
+            }
+
+            // Start the height shrinking with a faster transition
+            activeDivider.style.transition = 'height 0.3s ease';
+            activeDivider.style.height = '0.05vw';
+
+            activeDivider = null;
+          }, 0);
+        });
+      });
+    }
+
+    if (window.innerWidth >= 768) {
+      initializeHoverEffects();
+    }
+
+    window.addEventListener('resize', function() {
+      if (window.innerWidth >= 768) {
+        initializeHoverEffects();
+      }
+    });
+  });
+</script>
+</body>
+</html>
