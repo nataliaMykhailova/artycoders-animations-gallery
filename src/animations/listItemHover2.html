@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+      .item-list {
+        margin: 0;
+        padding: 0;
+      }
+
+      .item {
+        height: 4.6vw;
+        align-items: center;
+        display: flex;
+        position: relative;
+        font-size: 1.4em;
+        overflow: hidden;
+        border-bottom: 2px solid black;
+      }
+
+      .item:first-child {
+        border-top: 2px solid black;
+      }
+
+      .hover-wrap {
+        pointer-events: none;
+        flex-flow: column;
+        width: 120%;
+        height: 18vw;
+        margin-left: -15%;
+        display: flex;
+        position: absolute;
+        top: 7vw;
+        transition: transform 600ms ease, top 700ms ease;
+        transform: rotateZ(0deg);
+        backdrop-filter: invert(100%);
+      }
+
+      .item:hover .hover-wrap {
+        top: -6vw;
+      }
+    </style>
+</head>
+<body>
+<ul class="item-list">
+  <li class="item">Item 1
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 2
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 3
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 4
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 5
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 6
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 7
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+  <li class="item">Item 8
+    <div class="hover-wrap" style="transform: rotateZ(0deg);"></div>
+  </li>
+</ul>
+
+<script>
+  const projectBlocks = document.querySelectorAll('.item');
+
+  projectBlocks.forEach(projectBlock => {
+    projectBlock.addEventListener('mousemove', (event) => {
+      const hoverWrap = projectBlock.querySelector('.hover-wrap');
+
+      const blockRect = projectBlock.getBoundingClientRect(); // Use projectBlock's bounding box
+      const mouseX = event.clientX - blockRect.left; // Mouse X relative to the item
+      const blockWidth = blockRect.width;
+
+      const rotation = ((mouseX / blockWidth) - 0.3) * -10; // Calculate rotation
+
+      hoverWrap.style.transform = `rotateZ(${rotation}deg)`; // Apply rotation to hoverWrap
+    });
+
+    projectBlock.addEventListener('mouseleave', () => {
+      const hoverWrap = projectBlock.querySelector('.hover-wrap');
+
+      setTimeout(() => {
+        hoverWrap.style.transform = 'rotateZ(0deg)'; // Reset rotation
+      }, 200);
+    });
+  });
+</script>
+</body>
+</html>
