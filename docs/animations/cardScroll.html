@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .relative-block {
+            position: relative;
+        }
+
+        .swiper-container {
+            position: sticky;
+            top: 35%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .swiper-wrapper {
+            height: 40vh;
+            perspective: 70vw;
+            position: relative;
+        }
+
+        .swiper-slide.is--review {
+            background-color: #e1e1e1;
+            opacity: 40%;
+            width: 30vw;
+            height: 20vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+        }
+
+        .swiper-slide.is--review.is--right {
+            inset: 0% auto auto 0%;
+        }
+
+        .swiper-slide.is--review.is--left {
+            inset: 0% 0% auto auto;
+        }
+    </style>
+</head>
+<body>
+<div class="relative-block">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide is--review">
+                <p>Slide 1 Content</p>
+            </div>
+            <div class="swiper-slide is--review">
+                <p>Slide 2 Content</p>
+            </div>
+            <div class="swiper-slide is--review">
+                <p>Slide 3 Content</p>
+            </div>
+            <div class="swiper-slide is--review">
+                <p>Slide 4 Content</p>
+            </div>
+            <div class="swiper-slide is--review">
+                <p>Slide 5 Content</p>
+            </div>
+            <div class="swiper-slide is--review">
+                <p>Slide 6 Content</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function handleScroll() {
+            const relativeBlock = document.querySelector(".relative-block");
+            const reviewSlides = document.querySelectorAll(".swiper-slide.is--review");
+
+            if (!relativeBlock) return;
+
+
+            const rect = relativeBlock.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // Check if .relative-block is in the viewport
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                const animationOffset = 0.05;
+                const scrollProgress = Math.max(0, Math.min(1, ((windowHeight - rect.top) / (windowHeight + rect.height)) - animationOffset));
+
+                reviewSlides.forEach((slide, index) => {
+                    const minEnd = 0.35;
+                    const end = minEnd + ((reviewSlides.length - 1 - index) / (reviewSlides.length - 1)) * (1 - minEnd);
+                    const clampedProgress = Math.min(scrollProgress / end, 1);
+                    const initialZ = -40 * (reviewSlides.length - index);
+                    const translateZ = initialZ + ((75 - initialZ) * clampedProgress);
+
+                    let translateX = -1;
+                    if (slide.classList.contains('is--left')) {
+                        translateX = -9 * clampedProgress;
+                    } else if (slide.classList.contains('is--right')) {
+                        translateX = 9 * clampedProgress;
+                    }
+
+                    slide.style.transform = `translateX(${translateX}vw) translateZ(${translateZ}vw)`;
+                });
+            }
+        }
+
+        function initializeSwiperForLargeScreens() {
+            const reviewSlides = document.querySelectorAll(".swiper-slide.is--review");
+            const relativeBlock = document.querySelector(".relative-block");
+
+            if (relativeBlock) {
+                const totalHeight = reviewSlides.length * 70;
+                relativeBlock.style.height = `${totalHeight}vw`;
+            }
+
+            reviewSlides.forEach((slide, index) => {
+                if (index % 2 === 0) {
+                    slide.classList.add("is--right");
+                } else {
+                    slide.classList.add("is--left");
+                }
+            });
+
+            // Add the scroll event listener
+            window.addEventListener('scroll', handleScroll);
+        }
+
+        // Check screen width and initialize swiper if necessary
+        if (window.innerWidth >= 768) {
+            initializeSwiperForLargeScreens();
+        }
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) {
+                initializeSwiperForLargeScreens();
+            } else {
+                // Remove the scroll event listener
+                window.removeEventListener('scroll', handleScroll);
+            }
+        });
+    });
+</script>
+</body>
+</html>

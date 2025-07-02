@@ -194,7 +194,6 @@
     "width": "60vw",
     "height": "35vw"
   },
-
   {
     "id": "23",
     "title": "listItemHover2",
@@ -203,5 +202,23 @@
     "path": "animations/listItemHover2.html",
     "width": "60vw",
     "height": "35vw"
+  },
+  {
+    "id": "24",
+    "title": "hintCursor",
+    "type": "cursor",
+    "subtypes": [""],
+    "path": "animations/hintCursor.html",
+    "width": "15vw",
+    "height": "12vw"
+  },
+  {
+    "id": "25",
+    "title": "cardScroll",
+    "type": "blocks",
+    "subtypes": [""],
+    "path": "animations/cardScroll.html",
+    "width": "80vw",
+    "height": "70vh"
   }
 ]

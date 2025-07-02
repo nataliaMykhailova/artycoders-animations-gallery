@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hint Cursor</title>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 1em;
+    }
+
+    .cursor-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .cursor-block {
+      position: relative;
+      transition: opacity 0.2s ease;
+      will-change: transform;
+      opacity: 0;
+    }
+
+    .cursor {
+      justify-content: flex-end;
+      align-items: center;
+      width: 10px;
+      height: 40px;
+      display: flex;
+      position: absolute;
+      inset: 8px auto auto 8px;
+      transition: opacity 0.2s ease;
+    }
+
+    .cursor-text-block {
+      white-space: nowrap;
+      opacity: 1 !important;
+      background-color: blueviolet;
+      border-radius: 2px;
+      height: 14px;
+      padding: 0 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cursor-text {
+      color: white;
+      white-space: nowrap;
+      align-self: start;
+      margin-top: .1vw;
+      font-size: 10px;
+      overflow: hidden;
+    }
+
+    .cursor-text .char {
+      display: inline-block;
+      position: relative;
+      will-change: transform;
+    }
+  </style>
+</head>
+
+<body>
+<div class="cursor-wrapper">
+  <div class="cursor-block">
+    <div class="cursor">
+      <div class="cursor-text-block">
+        <p class="cursor-text"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button click>Click Me</button>
+<div drag>Drag Here</div>
+<a next>Next</a>
+<a prev>Previous</a>
+
+<script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cursorPointer = document.querySelector('.cursor');
+    const cursorBlock = document.querySelector('.cursor-block');
+    const pointerTextWrapper = document.querySelector('.cursor-text-block');
+    const pointerText = document.querySelector('.cursor-text');
+
+    cursorPointer.style.opacity = '0';
+
+    const showCursorOnInteraction = () => {
+      cursorBlock.style.opacity = '1';
+      document.removeEventListener('mousemove', showCursorOnInteraction);
+    };
+    document.addEventListener('mousemove', showCursorOnInteraction);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let ticking = false;
+
+    document.addEventListener('mousemove', (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          gsap.to(cursorBlock, {
+            x: mouseX,
+            y: mouseY,
+            duration: 0.2,
+            ease: 'power2.out'
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    document.addEventListener('mouseenter', () => {
+      cursorBlock.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseleave', () => {
+      cursorBlock.style.opacity = '0';
+    });
+
+    // Declare the variable at the top
+    let lastAttribute = null;
+    let hoverTimeline = null;
+
+    document.addEventListener('mouseover', (event) => {
+      const target = event.target;
+
+      let attributeName = null;
+      ['click', 'drag', 'next', 'prev'].forEach((attr) => {
+        if (target.hasAttribute(attr)) {
+          attributeName = attr;
+        }
+      });
+
+      if (attributeName) {
+        if (lastAttribute !== attributeName) {
+          lastAttribute = attributeName;
+
+          if (hoverTimeline) {
+            hoverTimeline.kill();
+          }
+
+          if (pointerText) {
+            if (pointerText.split) {
+              pointerText.split.revert();
+            }
+
+            pointerText.textContent = attributeName;
+
+            pointerText.split = new SplitType(pointerText, {
+              types: 'chars',
+              tagName: 'span'
+            });
+
+            gsap.set(pointerText.querySelectorAll('.char'), {
+              yPercent: 100,
+              opacity: 0,
+              position: 'relative',
+              display: 'inline-block',
+            });
+
+            hoverTimeline = gsap.timeline();
+
+            hoverTimeline.to(cursorPointer, {
+              opacity: 1,
+              duration: 0.1,
+              ease: 'power1.out',
+            }, 0);
+
+            hoverTimeline.to(pointerTextWrapper, {
+              height: '15px',
+              duration: 0.2,
+              ease: 'power1.out',
+            }, 0.15);
+
+            hoverTimeline.to(pointerText.querySelectorAll('.char'), {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.2,
+              ease: 'power1.out',
+              stagger: 0.02,
+            }, 0.13);
+          }
+        }
+      }
+    });
+
+    document.addEventListener('mouseout', (event) => {
+      const target = event.target;
+
+      let attributeName = null;
+      ['click', 'drag', 'next', 'prev'].forEach((attr) => {
+        if (target.hasAttribute(attr)) {
+          attributeName = attr;
+        }
+      });
+
+      if (attributeName && attributeName === lastAttribute) {
+        if (hoverTimeline) {
+          hoverTimeline.kill();
+        }
+
+        hoverTimeline = gsap.timeline();
+
+        hoverTimeline.to(pointerText.querySelectorAll('.char'), {
+          yPercent: 100,
+          opacity: 0,
+          duration: 0.15,
+          ease: 'power1.in',
+          stagger: 0.02,
+        }, 0);
+
+        hoverTimeline.set(pointerTextWrapper, {
+          height: '15px',
+        }, 0);
+
+        hoverTimeline.to(pointerTextWrapper, {
+          height: '0vw',
+          duration: 0.1,
+          ease: 'power1.out',
+        }, 0.16);
+
+        hoverTimeline.to(cursorPointer, {
+          opacity: 0,
+          duration: 0.05,
+          ease: 'power1.out',
+        }, 0.14);
+
+        hoverTimeline.call(() => {
+          if (pointerText.split) {
+            pointerText.split.revert();
+            pointerText.split = null;
+          }
+          pointerText.textContent = '';
+        });
+
+        lastAttribute = null;
+      }
+    });
+  });
+</script>
+</body>
+</html>
